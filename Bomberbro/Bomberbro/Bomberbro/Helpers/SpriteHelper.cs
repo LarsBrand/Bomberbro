@@ -11,7 +11,7 @@ namespace Bomberbro.Helpers
 	/// <summary>
 	/// Sprite helper class to manage and render sprites.
 	/// </summary>
-	class SpriteHelper
+	public class SpriteHelper
 	{
 		#region SpriteToRender helper class
 		class SpriteToRender
