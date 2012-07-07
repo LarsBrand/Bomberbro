@@ -72,6 +72,12 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bomberman\BombermanGame.cs" />
+    <Compile Include="bomberman\Brick.cs" />
+    <Compile Include="bomberman\BrickSollid.cs" />
+    <Compile Include="bomberman\GameField.cs" />
+    <Compile Include="bomberman\bomberManGuy.cs" />
+    <Compile Include="bomberman\IGameState.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\DisposeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />
