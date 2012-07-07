@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Bomberbro.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -9,6 +8,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Bomberbro.Helpers;
+using Bomberbro.bomberman;
 
 namespace Bomberbro
 {
@@ -18,22 +19,17 @@ namespace Bomberbro
     public class MainGame : Microsoft.Xna.Framework.Game
     {
 
-        private static Rectangle
-            _backgroundRectangle = new Rectangle(0, 0, 840, 690),
-            _sollidBrickRectangle = new Rectangle(90, 180, 60, 60),
-            _playerRectangle = new Rectangle(0, 0, 75, 79);
-
+       
         GraphicsDeviceManager _graphics;
         private int _width, _height;
-        private Texture2D _backgroundTexture,  _sollidBrickTexture, _playerTexture;
-        private Helpers.SpriteHelper _background, _sollidBrick,_player;
-        private Vector2 _playerPos;
+        private IGameState _game;
 
         public MainGame()
         {
             _graphics = new GraphicsDeviceManager(this);
             //_graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
+            _game = new BombermanGame(Content,_graphics);
         }
 
         /// <summary>
@@ -45,9 +41,8 @@ namespace Bomberbro
         protected override void Initialize()
         {
             _width = _graphics.GraphicsDevice.Viewport.Width;
-            _height = _graphics.GraphicsDevice.Viewport.Height;
-            _playerPos = new Vector2(0, 0);
-            
+            _height = _graphics.GraphicsDevice.Viewport.Height;   
+            _game.Initialize();
             base.Initialize();
         }
 
@@ -57,14 +52,7 @@ namespace Bomberbro
         /// </summary>
         protected override void LoadContent()
         {
-            _backgroundTexture = Content.Load<Texture2D>("layout_level_empty");
-            _background = new SpriteHelper(_backgroundTexture, _backgroundRectangle);
-
-            _sollidBrickTexture = Content.Load<Texture2D>("layout_level_indestructible_stones");
-            _sollidBrick= new SpriteHelper(_sollidBrickTexture,_sollidBrickRectangle);
-
-            _playerTexture = Content.Load<Texture2D>("player1_spreadsheet_temp");
-            _player= new SpriteHelper(_playerTexture,_playerRectangle);
+           _game.LoadContent();
         }
 
         /// <summary>
@@ -73,6 +61,7 @@ namespace Bomberbro
         /// </summary>
         protected override void UnloadContent()
         {
+            _game.UnloadContent();
 
         }
 
@@ -85,25 +74,7 @@ namespace Bomberbro
         {
             // Allows the game to exit
 
-            Input.Update();
-            if (Input.KeyboardDownPressed)
-            {
-                _playerPos.Y = _playerPos.Y + 0.001f *gameTime.ElapsedGameTime.Milliseconds;
-            }
-            if (Input.KeyboardUpPressed)
-            {
-                _playerPos.Y = _playerPos.Y - 0.001f *gameTime.ElapsedGameTime.Milliseconds;
-            }
-            if (Input.KeyboardLeftPressed)
-            {
-                _playerPos.X = _playerPos.X - 0.001f * gameTime.ElapsedGameTime.Milliseconds;
-            }
-            if (Input.KeyboardRightPressed)
-            {
-                _playerPos.X = _playerPos.X + 0.001f * gameTime.ElapsedGameTime.Milliseconds;
-            }
-
-
+           _game.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -114,25 +85,7 @@ namespace Bomberbro
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            _background.Render();
-            SpriteHelper.DrawSprites(_width,_height);
-
-            
-            _sollidBrick.Render(80,180);
-            _sollidBrick.Render(200, 180);
-            _sollidBrick.Render(320, 180);
-            _sollidBrick.Render(80, 300);
-            _sollidBrick.Render(80, 420);
-            SpriteHelper.DrawSprites(_width, _height);
-            _player.Render(Convert.ToInt32(_playerPos.X*_width), Convert.ToInt32(_playerPos.Y*_height));
-            SpriteHelper.DrawSprites(_width, _height);
-            _sollidBrick.Render(200, 300);
-            _sollidBrick.Render(320, 300);
-            _sollidBrick.Render(200, 420);
-            _sollidBrick.Render(320, 420);
-            SpriteHelper.DrawSprites(_width,_height);
-
-
+            _game.Draw(gameTime);
             base.Draw(gameTime);
         }
     }

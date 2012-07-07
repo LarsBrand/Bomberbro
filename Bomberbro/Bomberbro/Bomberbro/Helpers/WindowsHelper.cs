@@ -286,7 +286,7 @@ namespace Bomberbro.Helpers
 		/// </summary>
 		static public string GetDefaultPlayerName()
 		{
-			string defaultPlayerName = "Player";
+			string defaultPlayerName = "bomberManGuy";
 #if !XBOX360
 			try
 			{
@@ -294,7 +294,7 @@ namespace Bomberbro.Helpers
 
 				if (String.IsNullOrEmpty(defaultPlayerName))
 				{
-					defaultPlayerName = "Player";
+					defaultPlayerName = "bomberManGuy";
 				} // if (defaultPlayerName)
 				else
 				{
