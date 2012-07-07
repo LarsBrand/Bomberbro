@@ -1,49 +1,92 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Bomberbro.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberbro.bomberman
 {
     public class GameField
     {
         private GamefieldItems[,] gamefield;
+        private Texture2D _backgroundTexture;
+        private SpriteHelper _background;
 
         public GameField(GamefieldItems[,] gamefield)
         {
             this.gamefield = gamefield;
         }
 
-        public void DrawGameField(Vector2 fieldSize, Vector2 TotalSize, Vector4 Offsets, List<bomberManGuy> players, GameTime gameTime)
+        public void DrawGameField(Vector2 fieldSize, Vector2 totalSize, Vector2 position, List<bomberManGuy> players, GameTime gameTime)
         {
+            //Rectangle bgrec = new Rectangle((int)position.X, (int)position.Y, (int)fieldSize.X, (int)fieldSize.Y);
+            //_background.Render(bgrec);
+            int xLenght = gamefield.GetLength(0);
+            int yLenght = gamefield.GetLength(1);
+            int blockWidth = (int)(fieldSize.X / xLenght);
+            int blockHeight = (int)(fieldSize.Y / yLenght);
+
             //determing when to end the spritebatch calls based on player positions
-            int xLenght = gamefield.GetLength(1);
-            int yLenght = gamefield.GetLength(0);
-            for (int i = 0; i < xLenght; i++)//draw horizontally
+            Dictionary<int, int> playerHeigts = new Dictionary<int, int>();
+            for (int i = 0; i < players.Count; i++)
             {
-                float drawPercantageX = i == 0 ? 0 : (float)Convert.ToDouble(xLenght) / i;
-                for (int j = 0; j < yLenght; j++)//draw verticals
+                int row = GetRowHeight(fieldSize.Y, players[i].Position.Y - position.Y, blockHeight);
+                Debug.WriteLine(row.ToString());
+                playerHeigts.Add(i, row);
+            }
+
+            //Draw the game field
+            for (int j = 0; j < yLenght; j++)//draw verticals
+            {
+                float drawPercantageY = j == 0 ? 0 : (float)(Convert.ToDouble(j) / Convert.ToDouble(yLenght));
+                for (int i = 0; i < xLenght; i++)//draw horizontally
                 {
-                    float drawPercantageY = j == 0 ? 0 : (float)Convert.ToDouble(yLenght) / j;
-                    gamefield[i, j].DrawAllItems(Convert.ToInt32(fieldSize.X * drawPercantageX) + (int)Offsets.X, Convert.ToInt32(fieldSize.Y * drawPercantageY) + (int)Offsets.Y, gameTime);
+                    float drawPercantageX = i == 0 ? 0 : (float)(Convert.ToDouble(i) / Convert.ToDouble(xLenght));
+                    Rectangle drawRectangle = new Rectangle(Convert.ToInt32(fieldSize.X * drawPercantageX + position.X), Convert.ToInt32(fieldSize.Y * drawPercantageY + position.Y), blockWidth, blockHeight);
+                    gamefield[i, j].DrawAllItems(drawRectangle, gameTime);
+
+                    foreach (KeyValuePair<int, int> playerNumberAndRowHeight in playerHeigts)
+                    {
+                        if (playerNumberAndRowHeight.Value == j)//The player row is being drawn. should draw player else he is placed in front of the blocks.
+                        {
+                            SpriteHelper.DrawSprites((int)totalSize.X, (int)totalSize.Y);
+                            players[playerNumberAndRowHeight.Key].draw();
+                            SpriteHelper.DrawSprites((int)totalSize.X, (int)totalSize.Y);
+                        }
+                    }
                 }
 
             }
-            SpriteHelper.DrawSprites((int)TotalSize.X, (int)TotalSize.Y);
+            SpriteHelper.DrawSprites((int)totalSize.X, (int)totalSize.Y);
         }
 
-        public void LoadAllFieldContent(ContentManager content)
+        public int GetRowHeight(float fieldHeigt, float currentHeight, int blockSize)
         {
+            int rowNumber = 0;
+            for (int i = 0; i * blockSize < currentHeight; i++)
+            {
+                rowNumber = i;
+            }
+            return rowNumber + 1;
+        }
+
+        public void LoadAllFieldContent(ContentManager content, GraphicsDeviceManager graphics)
+        {
+            _backgroundTexture = new Texture2D(graphics.GraphicsDevice, 1, 1);
+            _backgroundTexture.SetData(new Color[] { Color.CornflowerBlue });
+            _background = new SpriteHelper(_backgroundTexture, new Rectangle(0, 0, 1, 1));
+
             for (int i = 0; i < gamefield.GetLength(0); i++)
             {
                 for (int j = 0; j < gamefield.GetLength(1); j++)
                 {
-                    gamefield[i,j].LoadAllItems(content);
+                    gamefield[i, j].LoadAllItems(content);
                 }
-                
+
             }
         }
     }
@@ -57,11 +100,11 @@ namespace Bomberbro.bomberman
             this.items = items;
         }
 
-        public void DrawAllItems(int positionX, int positionY, GameTime gameTime)
+        public void DrawAllItems(Rectangle rect, GameTime gameTime)
         {
             foreach (var gamefieldItem in items)
             {
-                gamefieldItem.Draw(positionX, positionY, gameTime);
+                gamefieldItem.Draw(rect, gameTime);
             }
         }
         public void LoadAllItems(ContentManager content)
@@ -78,7 +121,7 @@ namespace Bomberbro.bomberman
     public abstract class GamefieldItem
     {
 
-        public abstract void Draw(int postionX, int posistionY, GameTime gameTime);
+        public abstract void Draw(Rectangle rect, GameTime gameTime);
 
         public abstract void Update(GameTime gameTime);
 

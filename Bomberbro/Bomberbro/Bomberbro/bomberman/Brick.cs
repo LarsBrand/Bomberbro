@@ -24,9 +24,9 @@ namespace Bomberbro.bomberman
             //dummy, abstract blocks do nothing
         }
 
-        public override void Draw(int positionX, int positionY, GameTime gameTime)
+        public override void Draw(Rectangle rect, GameTime gameTime)
         {
-            _brick.Render(positionX, positionY);
+            _brick.Render(rect);
         }
     }
 }

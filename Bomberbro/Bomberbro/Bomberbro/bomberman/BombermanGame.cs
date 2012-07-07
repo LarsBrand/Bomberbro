@@ -30,7 +30,7 @@ namespace Bomberbro.bomberman
         private Vector2 _fieldSize;
         private Vector2 _totalSize;
         private Vector2 _playerPos;
-        private Vector4 _fieldOffSet;
+        private Vector2 _fieldPosition;
 
         private List<bomberManGuy> _players;
         private GameField _field;
@@ -39,20 +39,23 @@ namespace Bomberbro.bomberman
         {
             _graphics = graphics;
             _content = content;
+            _graphics.PreferredBackBufferWidth = 1600;
+            _graphics.PreferredBackBufferHeight = 900;
         }
         public void Initialize()
         {
+     
             _width = _graphics.GraphicsDevice.Viewport.Width;
             _height = _graphics.GraphicsDevice.Viewport.Height;
 
             _players = new List<bomberManGuy>();
             _players.Add(new bomberManGuy());
 
-            int fieldWidth = 860;
-            int fieldHeight = 690;
+            float fieldWidth = 896;
+            float fieldHeight = 576;
             _fieldSize = new Vector2(fieldWidth, fieldHeight);
             _totalSize = new Vector2(_width, _height);
-            _fieldOffSet = new Vector4((_width - fieldWidth) / 2, (_height - fieldHeight) / 2, (_width - fieldWidth) / 2, (_height - fieldHeight) / 2);
+            _fieldPosition = new Vector2(64,150);
 
             _playerPos = new Vector2(0, 0);
 
@@ -61,8 +64,8 @@ namespace Bomberbro.bomberman
 
         private void buildGameField()
         {
-            int sizeX = 10;
-            int sizeY = 10;
+            int sizeX = 9;
+            int sizeY = 11;
             
             GamefieldItems[,] buildingField= new GamefieldItems[sizeX,sizeY]; 
             for (int i = 0; i < sizeX ;i++)
@@ -77,6 +80,20 @@ namespace Bomberbro.bomberman
                     buildingField[i, j] = gamefieldItems;
                 }
             }
+                 List<GamefieldItem> brickBorderItem = new List<GamefieldItem>();                
+                        brickBorderItem.Add(new BrickSollid());
+                    GamefieldItems brickBorderItems = new GamefieldItems(brickBorderItem);
+
+            for (int i = 0; i < sizeX; i++)
+            {
+                buildingField[i, 0] = brickBorderItems;
+                buildingField[i, sizeY-1] = brickBorderItems;
+            }
+            for (int i = 0; i < sizeY; i++)
+            {
+                buildingField[0, i] = brickBorderItems;
+                buildingField[sizeX-1, i] = brickBorderItems;
+            }
             _field = new GameField(buildingField);
         }
 
@@ -90,7 +107,7 @@ namespace Bomberbro.bomberman
             {
                 bomberManGuy.LoadContent(_content);
             }
-            _field.LoadAllFieldContent(_content);
+            _field.LoadAllFieldContent(_content,_graphics);
 
         }
 
@@ -102,37 +119,23 @@ namespace Bomberbro.bomberman
         public void Update(GameTime gameTime)
         {
             Input.Update();
-            if (Input.KeyboardDownPressed)
+            foreach (var bomberManGuy in _players)
             {
-                _playerPos.Y = _playerPos.Y + 0.001f * gameTime.ElapsedGameTime.Milliseconds;
-            }
-            if (Input.KeyboardUpPressed)
-            {
-                _playerPos.Y = _playerPos.Y - 0.001f * gameTime.ElapsedGameTime.Milliseconds;
-            }
-            if (Input.KeyboardLeftPressed)
-            {
-                _playerPos.X = _playerPos.X - 0.001f * gameTime.ElapsedGameTime.Milliseconds;
-            }
-            if (Input.KeyboardRightPressed)
-            {
-                _playerPos.X = _playerPos.X + 0.001f * gameTime.ElapsedGameTime.Milliseconds;
-            }
-
-
+                bomberManGuy.Update(gameTime);
+            }         
         }
 
         public void Draw(GameTime gameTime)
         {
-
+            
             _background.Render();
             SpriteHelper.DrawSprites(_width, _height);
-            _field.DrawGameField(_fieldSize, _totalSize, _fieldOffSet, _players, gameTime);
+            _field.DrawGameField(_fieldSize, _totalSize, _fieldPosition, _players, gameTime);
 
-            foreach (var bomberManGuy in _players)
-            {
-                bomberManGuy.draw(Convert.ToInt32(_playerPos.X * _width), Convert.ToInt32(_playerPos.Y * _height));
-            }
+            //foreach (var bomberManGuy in _players)
+            //{
+            //    bomberManGuy.draw();
+            //}
             SpriteHelper.DrawSprites(_width, _height);
 
         }
