@@ -13,10 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using XnaGraphicEngine.Helpers;
+using Bomberbro.Helpers;
 #endregion
 
-namespace XnaGraphicEngine.Helpers
+namespace Bomberbro.Helpers
 {
 	/// <summary>
 	/// Input helper class, captures all the mouse, keyboard and XBox 360

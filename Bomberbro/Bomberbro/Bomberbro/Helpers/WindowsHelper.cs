@@ -17,7 +17,7 @@ using System.Security.Principal;
 using System.Globalization;
 #endregion
 
-namespace XnaGraphicEngine.Helpers
+namespace Bomberbro.Helpers
 {
 	/// <summary>
 	/// Windows helper

@@ -15,7 +15,7 @@ using System.Threading;
 #endif
 #endregion
 
-namespace XnaGraphicEngine.Helpers
+namespace Bomberbro.Helpers
 {
 	/// <summary>
 	/// Log will create automatically a log file and write

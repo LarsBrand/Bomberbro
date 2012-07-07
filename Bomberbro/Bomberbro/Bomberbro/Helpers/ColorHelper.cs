@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Text;
 #endregion
 
-namespace XnaGraphicEngine.Helpers
+namespace Bomberbro.Helpers
 {
 	/// <summary>
 	/// Color helper, just to convert colors to different formats and providing

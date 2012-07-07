@@ -78,12 +78,13 @@
     <Compile Include="Helpers\Input.cs" />
     <Compile Include="Helpers\Log.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
+    <Compile Include="Helpers\SpriteHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\Vector3Helper.cs" />
     <Compile Include="Helpers\WindowsHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="MainGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

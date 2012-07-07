@@ -17,7 +17,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 #endregion
 
-namespace XnaGraphicEngine.Helpers
+namespace Bomberbro.Helpers
 {
 	/// <summary>
 	/// StringHelper: Provides additional or simplified string functions.

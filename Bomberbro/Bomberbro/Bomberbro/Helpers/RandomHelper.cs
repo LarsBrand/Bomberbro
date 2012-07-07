@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Text;
 #endregion
 
-namespace XnaGraphicEngine.Helpers
+namespace Bomberbro.Helpers
 {
 	/// <summary>
 	/// Random helper

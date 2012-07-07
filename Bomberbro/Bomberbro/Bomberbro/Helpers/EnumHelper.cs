@@ -13,7 +13,7 @@ using System.Text;
 using System.Collections;
 #endregion
 
-namespace XnaGraphicEngine.Helpers
+namespace Bomberbro.Helpers
 {
 	/// <summary>
 	/// Enum helper
