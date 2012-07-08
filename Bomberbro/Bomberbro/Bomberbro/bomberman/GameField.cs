@@ -2,40 +2,63 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using Bomberbro.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+
 namespace Bomberbro.bomberman
 {
     public class GameField
     {
-        private GamefieldItems[,] gamefield;
+        private const int widthOfOneBlock = 60;
+        private const int heigthOfOneBlock = 60;
+
+        private GamefieldItems[,] _gamefield;
         private Texture2D _backgroundTexture;
         private SpriteHelper _background;
+        private float _fieldScale;
+        private Vector2 _fieldSize;
+        private Vector2 _totalSize;
+        private Vector2 _position;
 
-        public GameField(GamefieldItems[,] gamefield)
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern uint MessageBox(IntPtr hWnd, String text, String caption, uint type);
+
+        public GameField(GamefieldItems[,] gamefield, Vector2 totalSize, Vector2 fieldSize, Vector2 position)
         {
-            this.gamefield = gamefield;
+            _gamefield = gamefield;
+            _fieldSize = fieldSize;
+            _totalSize = totalSize;
+            _position = position;
+            float TempfieldScale = fieldSize.X/(widthOfOneBlock*gamefield.GetLength(0));
+            _fieldScale = fieldSize.Y / (heigthOfOneBlock*gamefield.GetLength(1));
+            if (TempfieldScale != _fieldScale)
+            {
+                MessageBox(new IntPtr(0), "OH no, The fields ratio's are off, this might look ugly", "Made a new gamefield", 0);
+            }
         }
 
-        public void DrawGameField(Vector2 fieldSize, Vector2 totalSize, Vector2 position, List<bomberManGuy> players, GameTime gameTime)
+        public void DrawGameField(List<bomberManGuy> players, GameTime gameTime)
         {
-            //Rectangle bgrec = new Rectangle((int)position.X, (int)position.Y, (int)fieldSize.X, (int)fieldSize.Y);
+            //Rectangle bgrec = new Rectangle((int)_position.X, (int)_position.Y, (int)_fieldSize.X, (int)_fieldSize.Y);
             //_background.Render(bgrec);
-            int xLenght = gamefield.GetLength(0);
-            int yLenght = gamefield.GetLength(1);
-            int blockWidth = (int)(fieldSize.X / xLenght);
-            int blockHeight = (int)(fieldSize.Y / yLenght);
+            int xLenght = _gamefield.GetLength(0);
+            int yLenght = _gamefield.GetLength(1);
+            int blockWidth = (int)(_fieldSize.X / xLenght);
+            int blockHeight = (int)(_fieldSize.Y / yLenght);
 
             //determing when to end the spritebatch calls based on player positions
             Dictionary<int, int> playerHeigts = new Dictionary<int, int>();
             for (int i = 0; i < players.Count; i++)
             {
-                int row = GetRowHeight(fieldSize.Y, players[i].Position.Y - position.Y, blockHeight);
-                Debug.WriteLine(row.ToString());
+                int row = GetRowHeight(_fieldSize.Y, players[i].Position.Y - _position.Y, blockHeight);
+                // Debug.WriteLine(row.ToString());
                 playerHeigts.Add(i, row);
             }
 
@@ -46,22 +69,22 @@ namespace Bomberbro.bomberman
                 for (int i = 0; i < xLenght; i++)//draw horizontally
                 {
                     float drawPercantageX = i == 0 ? 0 : (float)(Convert.ToDouble(i) / Convert.ToDouble(xLenght));
-                    Rectangle drawRectangle = new Rectangle(Convert.ToInt32(fieldSize.X * drawPercantageX + position.X), Convert.ToInt32(fieldSize.Y * drawPercantageY + position.Y), blockWidth, blockHeight);
-                    gamefield[i, j].DrawAllItems(drawRectangle, gameTime);
+                    Rectangle drawRectangle = new Rectangle(Convert.ToInt32(_fieldSize.X * drawPercantageX + _position.X), Convert.ToInt32(_fieldSize.Y * drawPercantageY + _position.Y), blockWidth, blockHeight);
+                    _gamefield[i, j].DrawAllItems(drawRectangle, gameTime);
 
                     foreach (KeyValuePair<int, int> playerNumberAndRowHeight in playerHeigts)
                     {
                         if (playerNumberAndRowHeight.Value == j)//The player row is being drawn. should draw player else he is placed in front of the blocks.
                         {
-                            SpriteHelper.DrawSprites((int)totalSize.X, (int)totalSize.Y);
-                            players[playerNumberAndRowHeight.Key].draw();
-                            SpriteHelper.DrawSprites((int)totalSize.X, (int)totalSize.Y);
+                            SpriteHelper.DrawSprites((int)_totalSize.X, (int)_totalSize.Y);
+                            players[playerNumberAndRowHeight.Key].Draw(_fieldScale);
+                            SpriteHelper.DrawSprites((int)_totalSize.X, (int)_totalSize.Y);
                         }
                     }
                 }
 
             }
-            SpriteHelper.DrawSprites((int)totalSize.X, (int)totalSize.Y);
+            SpriteHelper.DrawSprites((int)_totalSize.X, (int)_totalSize.Y);
         }
 
         public int GetRowHeight(float fieldHeigt, float currentHeight, int blockSize)
@@ -71,7 +94,7 @@ namespace Bomberbro.bomberman
             {
                 rowNumber = i;
             }
-            return rowNumber + 1;
+            return rowNumber;
         }
 
         public void LoadAllFieldContent(ContentManager content, GraphicsDeviceManager graphics)
@@ -80,11 +103,11 @@ namespace Bomberbro.bomberman
             _backgroundTexture.SetData(new Color[] { Color.CornflowerBlue });
             _background = new SpriteHelper(_backgroundTexture, new Rectangle(0, 0, 1, 1));
 
-            for (int i = 0; i < gamefield.GetLength(0); i++)
+            for (int i = 0; i < _gamefield.GetLength(0); i++)
             {
-                for (int j = 0; j < gamefield.GetLength(1); j++)
+                for (int j = 0; j < _gamefield.GetLength(1); j++)
                 {
-                    gamefield[i, j].LoadAllItems(content);
+                    _gamefield[i, j].LoadAllItems(content);
                 }
 
             }
