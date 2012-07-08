@@ -108,8 +108,8 @@ namespace Bomberbro.Helpers
 		public void RenderCentered(float x, float y, float scale)
 		{
 			Render(new Rectangle(
-				(int)(x * 1024 - scale * gfxRect.Width/2),
-				(int)(y * 768 - scale * gfxRect.Height/2),
+				(int)(x  - scale * gfxRect.Width/2),
+				(int)(y - scale * gfxRect.Height/2),
 				(int)(scale * gfxRect.Width),
 				(int)(scale * gfxRect.Height)));
 		} // RenderCentered(x, y)

@@ -51,7 +51,7 @@ namespace Bomberbro.bomberman
             _players = new List<bomberManGuy>();
             _players.Add(new bomberManGuy());
 
-            float fieldWidth = 896;
+            float fieldWidth = 806;
             float fieldHeight = 576;
             _fieldSize = new Vector2(fieldWidth, fieldHeight);
             _totalSize = new Vector2(_width, _height);
@@ -64,8 +64,8 @@ namespace Bomberbro.bomberman
 
         private void buildGameField()
         {
-            int sizeX = 9;
-            int sizeY = 11;
+            int sizeX = 21;
+            int sizeY = 15;
             
             GamefieldItems[,] buildingField= new GamefieldItems[sizeX,sizeY]; 
             for (int i = 0; i < sizeX ;i++)
@@ -94,7 +94,7 @@ namespace Bomberbro.bomberman
                 buildingField[0, i] = brickBorderItems;
                 buildingField[sizeX-1, i] = brickBorderItems;
             }
-            _field = new GameField(buildingField);
+            _field = new GameField(buildingField,_totalSize,_fieldSize,_fieldPosition);
         }
 
         public void LoadContent()
@@ -130,7 +130,7 @@ namespace Bomberbro.bomberman
             
             _background.Render();
             SpriteHelper.DrawSprites(_width, _height);
-            _field.DrawGameField(_fieldSize, _totalSize, _fieldPosition, _players, gameTime);
+            _field.DrawGameField(_players, gameTime);
 
             //foreach (var bomberManGuy in _players)
             //{

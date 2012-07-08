@@ -91,6 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="MainGame.cs" />
+    <Compile Include="Tests\FontTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

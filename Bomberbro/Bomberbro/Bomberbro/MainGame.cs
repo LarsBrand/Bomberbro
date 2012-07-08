@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bomberbro.Tests;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -19,7 +20,7 @@ namespace Bomberbro
     public class MainGame : Microsoft.Xna.Framework.Game
     {
 
-       
+
         GraphicsDeviceManager _graphics;
         private int _width, _height;
         private IGameState _game;
@@ -29,7 +30,8 @@ namespace Bomberbro
             _graphics = new GraphicsDeviceManager(this);
             //_graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
-            _game = new BombermanGame(Content,_graphics);
+            _game = new BombermanGame(Content, _graphics);
+            //_game= new FontTest(Content,_graphics);
         }
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace Bomberbro
         protected override void Initialize()
         {
             _width = _graphics.GraphicsDevice.Viewport.Width;
-            _height = _graphics.GraphicsDevice.Viewport.Height;   
+            _height = _graphics.GraphicsDevice.Viewport.Height;
             _game.Initialize();
             base.Initialize();
         }
@@ -52,7 +54,7 @@ namespace Bomberbro
         /// </summary>
         protected override void LoadContent()
         {
-           _game.LoadContent();
+            _game.LoadContent();
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace Bomberbro
         {
             // Allows the game to exit
 
-           _game.Update(gameTime);
+            _game.Update(gameTime);
             base.Update(gameTime);
         }
 

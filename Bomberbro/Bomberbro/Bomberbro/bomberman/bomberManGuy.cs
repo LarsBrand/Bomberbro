@@ -16,6 +16,7 @@ namespace Bomberbro.bomberman
         private Texture2D _playerTexture;
         private SpriteHelper _player;
         private Vector2 position;
+        private Rectangle gfxRectangle;
 
         public Vector2 Position
         {
@@ -27,11 +28,22 @@ namespace Bomberbro.bomberman
         {
             _playerTexture = content.Load<Texture2D>("player1_spreadsheet_temp");
             _player = new SpriteHelper(_playerTexture, _playerRectangle);
+            //gfxRectangle= new Rectangle(0,0,_playerTexture.Width,_playerTexture.Height);
         }
 
-        public void draw()
+        public void Draw()
         {
-            _player.Render(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y));
+            Draw(1);
+            //_player.Render(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y));
+        }
+
+        public void Draw(float scale)
+        {
+        //    int width = Convert.ToInt32(scale*_playerRectangle.Width);
+        //    int heigtht = Convert.ToInt32(scale*_playerRectangle.Height);
+            
+        //    _player.Render(new Rectangle(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y),width,heigtht));
+            _player.RenderCentered(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y),scale);
         }
 
         public void Update(GameTime gameTime)
