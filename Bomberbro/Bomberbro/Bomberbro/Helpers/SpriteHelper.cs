@@ -102,7 +102,7 @@ namespace Bomberbro.Helpers
 
 		public void Render()
 		{
-			Render(new Rectangle(0, 0, 1024, 768));
+			Render(new Rectangle(0, 0, 840, 690));
 		} // Render(texture)
 
 		public void RenderCentered(float x, float y, float scale)
@@ -145,10 +145,10 @@ namespace Bomberbro.Helpers
 				spriteBatch.Draw(sprite.texture,
 					// Rescale to fit resolution
 					new Rectangle(
-					sprite.rect.X * width / 1024,
-					sprite.rect.Y * height / 768,
-					sprite.rect.Width * width / 1024,
-					sprite.rect.Height * height / 768),
+					sprite.rect.X * width / 840,
+					sprite.rect.Y * height / 690,
+					sprite.rect.Width * width / 840,
+					sprite.rect.Height * height / 690),
 					sprite.sourceRect, sprite.color);
 
 			// We are done, draw everything on screen with help of the end method.

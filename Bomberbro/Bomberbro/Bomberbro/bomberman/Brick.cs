@@ -15,7 +15,11 @@ namespace Bomberbro.bomberman
         protected Texture2D _brickTextures;
         protected SpriteHelper _brick;
 
-
+        public  Brick()
+        {
+            CollisionType = CollisionTypes.Block;
+            
+        }
 
      
 
