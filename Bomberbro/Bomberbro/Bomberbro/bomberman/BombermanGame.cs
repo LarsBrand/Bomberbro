@@ -48,11 +48,11 @@ namespace Bomberbro.bomberman
             _height = _graphics.GraphicsDevice.Viewport.Height;
 
 
-            float fieldWidth = 840;
-            float fieldHeight = 600;
+            float fieldWidth = 900;
+            float fieldHeight = 660;
             _fieldSize = new Vector2(fieldWidth, fieldHeight);
             _totalSize = new Vector2(_width, _height);
-            _fieldPosition = new Vector2(0, 90);
+            _fieldPosition = new Vector2(-30, 60);
 
             buildGameField();
 
@@ -68,8 +68,8 @@ namespace Bomberbro.bomberman
 
         private void buildGameField()
         {
-            int sizeX = 11;
-            int sizeY = 9;
+            int sizeX = 15;
+            int sizeY = 11;
 
             GamefieldItems[,] buildingField = new GamefieldItems[sizeX, sizeY];
             for (int i = 0; i < sizeX; i++)
@@ -85,7 +85,7 @@ namespace Bomberbro.bomberman
                 }
             }
             List<GamefieldItem> brickBorderItem = new List<GamefieldItem>();
-            brickBorderItem.Add(new BrickSollid());
+            brickBorderItem.Add(new InvisableBlock());
             GamefieldItems brickBorderItems = new GamefieldItems(brickBorderItem);
 
             for (int i = 0; i < sizeX; i++)
@@ -125,6 +125,10 @@ namespace Bomberbro.bomberman
             Input.Update();
 
             _bomberManInput.Update(gameTime);
+            foreach (var bomberManGuy in _players)
+            {
+                bomberManGuy.Update(gameTime);
+            }
         }
 
         public void Draw(GameTime gameTime)

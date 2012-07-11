@@ -73,13 +73,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="bomberman\BombermanGame.cs" />
-    <Compile Include="bomberman\bomberManInput.cs" />
-    <Compile Include="bomberman\Brick.cs" />
-    <Compile Include="bomberman\BrickSollid.cs" />
-    <Compile Include="bomberman\CollisionChecker.cs" />
-    <Compile Include="bomberman\GameField.cs" />
-    <Compile Include="bomberman\bomberManGuy.cs" />
-    <Compile Include="bomberman\IGameState.cs" />
+    <Compile Include="bomberman\Helper\Animation.cs" />
+    <Compile Include="bomberman\Player\bomberManInput.cs" />
+    <Compile Include="bomberman\GameField\Bricks\Brick.cs" />
+    <Compile Include="bomberman\GameField\Bricks\BrickSollid.cs" />
+    <Compile Include="bomberman\Helper\CollisionChecker.cs" />
+    <Compile Include="bomberman\GameField\GameField.cs" />
+    <Compile Include="bomberman\Player\bomberManGuy.cs" />
+    <Compile Include="bomberman\Helper\IGameState.cs" />
+    <Compile Include="bomberman\GameField\Bricks\InvisableBlock.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\DisposeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />

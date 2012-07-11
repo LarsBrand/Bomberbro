@@ -18,8 +18,8 @@ namespace Bomberbro.bomberman
 
         public override void LoadContent(ContentManager content)
         {
-            _brickRectangle = new Rectangle(90,180,60,60);
-            _brickTextures = content.Load<Texture2D>("layout_level_indestructible_stones");
+            _brickRectangle = new Rectangle(3,4,60,60);
+            _brickTextures = content.Load<Texture2D>("blocks");
             _brick = new SpriteHelper(_brickTextures,_brickRectangle);
 
             

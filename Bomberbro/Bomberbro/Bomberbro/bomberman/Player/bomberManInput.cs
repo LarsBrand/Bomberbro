@@ -21,13 +21,15 @@ namespace Bomberbro.bomberman
         public void Update(GameTime gameTime)
         {
             #region player one
-
             int playerOne = 0;
+            
+            _players[playerOne].setAnimation(playerAnimations.normal);
             if (Input.KeyboardDownPressed)
             {
                 int movementY = Convert.ToInt32(0.2f * gameTime.ElapsedGameTime.Milliseconds);
                 var movement = CreateMoveObject(playerOne, 0, movementY);
                 _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
+                _players[playerOne].setAnimation(playerAnimations.down);
                 //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X, _players[playerOne].Position.Y + 0.2f * gameTime.ElapsedGameTime.Milliseconds);
             }
             if (Input.KeyboardUpPressed)
@@ -35,6 +37,7 @@ namespace Bomberbro.bomberman
                 int movementY = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds) * -1);
                 var movement = CreateMoveObject(playerOne, 0, movementY);
                 _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
+                _players[playerOne].setAnimation(playerAnimations.up);
                 //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X, _players[playerOne].Position.Y - 0.2f * gameTime.ElapsedGameTime.Milliseconds);
             }
             if (Input.KeyboardLeftPressed)
@@ -43,7 +46,7 @@ namespace Bomberbro.bomberman
                 int movementX = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds)*-1);
                 var movement = CreateMoveObject(playerOne, movementX, 0);
                 _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
-
+                _players[playerOne].setAnimation(playerAnimations.left);
                 //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X - 0.2f * gameTime.ElapsedGameTime.Milliseconds, _players[playerOne].Position.Y);
                 //position.X = position.X - 0.2f * gameTime.ElapsedGameTime.Milliseconds;
             }
@@ -52,6 +55,7 @@ namespace Bomberbro.bomberman
                 int movementX = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds) );
                 var movement = CreateMoveObject(playerOne, movementX, 0);
                 _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
+                _players[playerOne].setAnimation(playerAnimations.right);
                 //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X + 0.2f * gameTime.ElapsedGameTime.Milliseconds, _players[playerOne].Position.Y);
                 //position.X = position.X + 0.2f * gameTime.ElapsedGameTime.Milliseconds;
             }
@@ -62,7 +66,7 @@ namespace Bomberbro.bomberman
         {
             MoveObject movement = new MoveObject();
             movement.OrigionalScreenPos = _players[playerNumber].Position;
-            movement.OrigionalHitBox = _players[playerNumber].GetBombermanGuyPositionedRectangle(_gameField.FieldScale);
+            movement.OrigionalHitBox = _players[playerNumber].GetBombermanGuyPositionedHitBox(_gameField.FieldScale);
             movement.OriginalGamefieldPosition = _gameField.getPosistionOfRectInGrid(movement.OrigionalHitBox);
 
 
