@@ -39,9 +39,9 @@ namespace Bomberbro.bomberman
         public void LoadContent(ContentManager content, GraphicsDeviceManager graphics)
         {
 
-            //_hitBoxTexture = new Texture2D(graphics.GraphicsDevice, 1, 1);
-            //_hitBoxTexture.SetData(new Color[] { Color.Red });
-            //_hitBox = new SpriteHelper(_hitBoxTexture, new Rectangle(0, 0, 1, 1));
+            _hitBoxTexture = new Texture2D(graphics.GraphicsDevice, 1, 1);
+            _hitBoxTexture.SetData(new Color[] { Color.Red });
+            _hitBox = new SpriteHelper(_hitBoxTexture, new Rectangle(0, 0, 1, 1));
 
             //_centerTexture = new Texture2D(graphics.GraphicsDevice, 1, 1);
             //_centerTexture.SetData(new Color[] { Color.Lime });
@@ -65,7 +65,7 @@ namespace Bomberbro.bomberman
         public void Draw(float scale)
         {
             _player.Render(new Rectangle(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y), Convert.ToInt32(_playerRectangle.Width * scale), Convert.ToInt32(_playerRectangle.Height * scale)));
-            //drawHitBox(scale);
+            drawHitBox(scale);
             //drawCenter(scale);
         }
 
