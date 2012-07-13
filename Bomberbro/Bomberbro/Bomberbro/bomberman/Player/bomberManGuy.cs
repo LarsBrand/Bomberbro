@@ -147,7 +147,7 @@ namespace Bomberbro.bomberman
 
         public Rectangle GetBombermanGuyPositionedHitBox(float scale)
         {
-            return new Rectangle((int)(_position.X) + Convert.ToInt32(((_playerRectangle.Width * scale) - PlayerHitBoxWidth) / 2), (int)(_position.Y) + Convert.ToInt32((_playerRectangle.Height * scale) - PlayerHitBoxHeight), PlayerHitBoxWidth, PlayerHitBoxHeight);
+            return new Rectangle((int)(_position.X) + Convert.ToInt32(((_playerRectangle.Width * scale) - PlayerHitBoxWidth) / 2), (int)(_position.Y) + Convert.ToInt32((_playerRectangle.Height * scale) - PlayerHitBoxHeight -10), PlayerHitBoxWidth, PlayerHitBoxHeight);
         }
 
         public void Update(GameTime gameTime)

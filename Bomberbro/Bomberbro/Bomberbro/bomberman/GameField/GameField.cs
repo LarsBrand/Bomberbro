@@ -105,7 +105,6 @@ namespace Bomberbro.bomberman
 
                 playerPositionsInGrid.Add(i, playerPosition);
             }
-
             //Draw the game field
             for (int j = 0; j < YLenght; j++)//draw verticals
             {
@@ -118,7 +117,7 @@ namespace Bomberbro.bomberman
 
                     foreach (KeyValuePair<int, Vector2> playerNumberAndRowHeight in playerPositionsInGrid)
                     {
-                        if (playerNumberAndRowHeight.Value.Y == j && i == YLenght)//The player row is being drawn. should draw player else he is placed in front of the blocks.
+                        if (playerNumberAndRowHeight.Value.Y == j && i == xLenght-1)//The player row is being drawn. should draw player else he is placed in front of the blocks.
                         {   //Note: && i==ylength, We want to do this only once
                             SpriteHelper.DrawSprites((int)_totalSize.X, (int)_totalSize.Y);
                             players[playerNumberAndRowHeight.Key].Draw(FieldScale);
