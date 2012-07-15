@@ -73,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="bomberman\BombermanGame.cs" />
+    <Compile Include="bomberman\GameField\Bomb\Bomb.cs" />
+    <Compile Include="bomberman\GameField\Bomb\Explosion.cs" />
     <Compile Include="bomberman\Helper\Animation.cs" />
     <Compile Include="bomberman\Player\bomberManInput.cs" />
     <Compile Include="bomberman\GameField\Bricks\Brick.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Tests\FontTest.cs" />
+    <Compile Include="Tests\SpriteTurningTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

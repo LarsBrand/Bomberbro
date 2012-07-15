@@ -26,16 +26,18 @@ namespace Bomberbro.bomberman
         private Vector2 _position;
         private int xLenght;
         private int yLenght;
+        private Explosion _explosionProtoType;
+
 
         public int BlockWidth
         {
-            get { return Convert.ToInt32(_fieldSize.X/xLenght); }
+            get { return Convert.ToInt32(_fieldSize.X / xLenght); }
         }
-        public  int BlockHeight
+        public int BlockHeight
         {
             get { return Convert.ToInt32(_fieldSize.Y / yLenght); }
         }
-        
+
 
 
 
@@ -87,14 +89,15 @@ namespace Bomberbro.bomberman
 
             XLenght = gamefield.GetLength(0);
             YLenght = gamefield.GetLength(1);
+            _explosionProtoType = new Explosion();
         }
 
         public void DrawGameField(List<BomberManGuy> players, GameTime gameTime)
         {
             //Rectangle bgrec = new Rectangle((int)_position.X, (int)_position.Y, (int)_fieldSize.X, (int)_fieldSize.Y);
             //_background.Render(bgrec);
-        
-           
+
+
 
             //determing when to end the spritebatch calls based on player positions
             Dictionary<int, Vector2> playerPositionsInGrid = new Dictionary<int, Vector2>();
@@ -106,18 +109,18 @@ namespace Bomberbro.bomberman
                 playerPositionsInGrid.Add(i, playerPosition);
             }
             //Draw the game field
-            for (int j = 0; j < YLenght; j++)//draw verticals
+            for (int yPoint = 0; yPoint < yLenght; yPoint++)//draw verticals
             {
-                float drawPercantageY = j == 0 ? 0 : (float)(Convert.ToDouble(j) / Convert.ToDouble(YLenght));
-                for (int i = 0; i < XLenght; i++)//draw horizontally
+                float drawPercantageY = yPoint == 0 ? 0 : (float)(Convert.ToDouble(yPoint) / Convert.ToDouble(YLenght));
+                for (int xPoint = 0; xPoint < xLenght; xPoint++)//draw horizontally
                 {
-                    float drawPercantageX = i == 0 ? 0 : (float)(Convert.ToDouble(i) / Convert.ToDouble(XLenght));
+                    float drawPercantageX = xPoint == 0 ? 0 : (float)(Convert.ToDouble(xPoint) / Convert.ToDouble(XLenght));
                     Rectangle drawRectangle = new Rectangle(Convert.ToInt32(_fieldSize.X * drawPercantageX + _position.X), Convert.ToInt32(_fieldSize.Y * drawPercantageY + _position.Y), BlockWidth, BlockHeight);
-                    Gamefield[i, j].DrawAllItems(drawRectangle, gameTime);
+                    Gamefield[xPoint, yPoint].DrawAllItems(drawRectangle, gameTime);
 
                     foreach (KeyValuePair<int, Vector2> playerNumberAndRowHeight in playerPositionsInGrid)
                     {
-                        if (playerNumberAndRowHeight.Value.Y == j && i == xLenght-1)//The player row is being drawn. should draw player else he is placed in front of the blocks.
+                        if (playerNumberAndRowHeight.Value.Y == yPoint && xPoint == xLenght - 1)//The player row is being drawn. should draw player else he is placed in front of the blocks.
                         {   //Note: && i==ylength, We want to do this only once
                             SpriteHelper.DrawSprites((int)_totalSize.X, (int)_totalSize.Y);
                             players[playerNumberAndRowHeight.Key].Draw(FieldScale);
@@ -154,7 +157,7 @@ namespace Bomberbro.bomberman
             else
             {
                 float trying = xCord / (BlockWidth);
-                pointOnGrid.X = (int)Math.Floor(xCord / (BlockWidth ));
+                pointOnGrid.X = (int)Math.Floor(xCord / (BlockWidth));
             }
             //  Console.WriteLine(pointOnGrid);
             return pointOnGrid;
@@ -213,6 +216,7 @@ namespace Bomberbro.bomberman
             //_backgroundTexture.SetData(new Color[] { Color.CornflowerBlue });
             //_background = new SpriteHelper(_backgroundTexture, new Rectangle(0, 0, 1, 1));
 
+            _explosionProtoType.LoadContent(content);
             for (int i = 0; i < Gamefield.GetLength(0); i++)
             {
                 for (int j = 0; j < Gamefield.GetLength(1); j++)
@@ -221,6 +225,158 @@ namespace Bomberbro.bomberman
                 }
 
             }
+        }
+
+        public void PlaceBomb(BomberManGuy bomberManGuy)
+        {
+            Bomb newBomb = bomberManGuy.getBomb();
+            if (newBomb != null)
+            {
+                Vector2 bombpoint = GetPosistionInGrid(bomberManGuy.GetCenterOfPositionedHitBox(_fieldScale));
+                _gamefield[(int)bombpoint.X, (int)bombpoint.Y].Items.Add(newBomb);
+
+            }
+        }
+
+        public void updateField(GameTime gameTime)
+        {
+            for (int yPoint = 0; yPoint < yLenght; yPoint++)
+            {
+                for (int xPoint = 0; xPoint < xLenght; xPoint++)
+                {
+                    _gamefield[xPoint, yPoint].updateAllItems(gameTime);
+                }
+            }
+            //remove bombs
+            for (int yPoint = 0; yPoint < yLenght; yPoint++)
+            {
+                for (int xPoint = 0; xPoint < xLenght; xPoint++)
+                {
+                    Bomb placedBomb = _gamefield[xPoint, yPoint].getBomb();
+                    if (placedBomb != null)
+                    {
+                        if (placedBomb.Exploded)
+                        {//remove it
+                            _gamefield[xPoint, yPoint].Items.Remove(placedBomb);
+                            CreateExplosion(placedBomb, xPoint, yPoint);
+                        }
+                    }
+                }
+            }
+            //handle explosions              
+            for (int yPoint = 0; yPoint < yLenght; yPoint++)
+            {
+                for (int xPoint = 0; xPoint < xLenght; xPoint++)
+                {
+                    Explosion explosion = _gamefield[xPoint, yPoint].getExplosion();
+                    if (explosion != null)
+                    {//set correct explosiontype
+                        bool up = false, down = false, left = false, right = false;
+
+
+                        if (xPoint - 1 > 0 && _gamefield[xPoint - 1, yPoint].getExplosion() != null)
+                        {
+                            left = true;
+                        }
+                        if (xPoint + 1 < _gamefield.GetLength(0) && _gamefield[xPoint + 1, yPoint].getExplosion() != null)
+                        {
+                            right = true;
+                        }
+                        if (yPoint - 1 > 0 && _gamefield[xPoint, yPoint - 1].getExplosion() != null)
+                        {
+                            up = true;
+                        }
+                        if (yPoint + 1 < _gamefield.GetLength(1) && _gamefield[xPoint, yPoint + 1].getExplosion() != null)
+                        {
+                            down = true;
+                        }
+
+                        if (up && down && left && right)
+                        {
+                            explosion.ExplosionType = ExplosionTypes.Cross;
+                        }
+                        else
+                        {
+                            if (up && !down)
+                            {
+                                explosion.ExplosionType = ExplosionTypes.DownEnd;
+                            }
+                            else if (up)
+                            {
+                                explosion.ExplosionType = ExplosionTypes.Down;
+                            }
+
+                            if (down && !up)
+                            {
+                                explosion.ExplosionType = ExplosionTypes.UpEnd;
+                            }
+                            else if (down)
+                            {
+                                explosion.ExplosionType = ExplosionTypes.Up;
+                            }
+                            if (left && !right)
+                            {
+                                explosion.ExplosionType = ExplosionTypes.RightEnd;
+                            }
+                            else if (left)
+                            {
+                                explosion.ExplosionType = ExplosionTypes.Right;
+                            }
+                            if (right&&!left)
+                            {
+                                explosion.ExplosionType=ExplosionTypes.LeftEnd;
+                            }
+                            else if (right)
+                            {
+                                explosion.ExplosionType=ExplosionTypes.Left;
+                            }
+                            {
+                                
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+
+        private void CreateExplosion(Bomb placedBomb, int xPoint, int yPoint)
+        {
+            _gamefield[xPoint, yPoint].Items.Add(_explosionProtoType.Copy());
+
+            for (int i = 1; i <= placedBomb.Power; i++)
+            {
+                _gamefield[xPoint + i, yPoint].Items.Add(_explosionProtoType.Copy());
+                _gamefield[xPoint - i, yPoint].Items.Add(_explosionProtoType.Copy());
+                _gamefield[xPoint, yPoint + i].Items.Add(_explosionProtoType.Copy());
+                _gamefield[xPoint, yPoint - i].Items.Add(_explosionProtoType.Copy());
+            }
+
+        }
+
+        public bool wasPlayerOnThisPointPreviously(GameField gameField, float xPos, float yPos, MoveObject moveObject)
+        {
+            Vector2 topLeft = GetPosistionInGrid(new Vector2(moveObject.PreviousHitBox.Left, moveObject.PreviousHitBox.Top));
+            Vector2 topRight = GetPosistionInGrid(new Vector2(moveObject.PreviousHitBox.Right, moveObject.PreviousHitBox.Top));
+            Vector2 bottomLeft = GetPosistionInGrid(new Vector2(moveObject.PreviousHitBox.Left, moveObject.PreviousHitBox.Bottom));
+            Vector2 bottomRight = GetPosistionInGrid(new Vector2(moveObject.PreviousHitBox.Right, moveObject.PreviousHitBox.Bottom));
+            if (topLeft.X == xPos && topLeft.Y == yPos)
+            {
+                return true;
+            }
+            if (topRight.X == xPos && topRight.Y == yPos)
+            {
+                return true;
+            }
+            if (bottomLeft.X == xPos && bottomLeft.Y == yPos)
+            {
+                return true;
+            }
+            if (bottomRight.X == xPos && bottomRight.Y == yPos)
+            {
+                return true;
+            }
+            return false;
         }
     }
 
@@ -255,6 +411,37 @@ namespace Bomberbro.bomberman
                 gamefieldItem.LoadContent(content);
             }
         }
+        public void updateAllItems(GameTime gameTime)
+        {
+            foreach (var gamefieldItem in Items)
+            {
+                gamefieldItem.Update(gameTime);
+            }
+        }
+
+        public Bomb getBomb()
+        {
+            foreach (GamefieldItem gamefieldItem in Items)
+            {
+                if (gamefieldItem.GetType() == typeof(Bomb))
+                {
+                    return (Bomb)gamefieldItem;
+                }
+            }
+            return null;
+        }
+
+        public Explosion getExplosion()
+        {
+            foreach (GamefieldItem gamefieldItem in Items)
+            {
+                if (gamefieldItem.GetType() == typeof(Explosion))
+                {
+                    return (Explosion)gamefieldItem;
+                }
+            }
+            return null;
+        }
     }
 
 
@@ -277,6 +464,6 @@ namespace Bomberbro.bomberman
     }
     public enum CollisionTypes
     {
-        Block, Empty, Moveable, PowerUp
+        Block, Empty, Bomb, PowerUp, Explosion
     }
 }

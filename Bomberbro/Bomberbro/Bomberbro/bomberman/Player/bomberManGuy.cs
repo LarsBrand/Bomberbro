@@ -18,8 +18,10 @@ namespace Bomberbro.bomberman
         private Vector2 _position;
         private int _playerHitBoxWidth;
         private int _playerHitBoxHeight;
+        private Bomb bombProtoType;
+        private Rectangle _bombermanGuyPositionedHitBoxPreviousUpdate;
 
-
+        
         private Animation _currentAnimation;
         private Animation _idleAnimation;
         private Animation _leftAnimation;
@@ -45,6 +47,12 @@ namespace Bomberbro.bomberman
         {
             get { return _playerHitBoxHeight; }
             set { _playerHitBoxHeight = value; }
+        }
+
+        public Rectangle BombermanGuyPositionedHitBoxPreviousUpdate
+        {
+            get { return _bombermanGuyPositionedHitBoxPreviousUpdate; }
+            set { _bombermanGuyPositionedHitBoxPreviousUpdate = value; }
         }
 
         public void LoadContent(ContentManager content, GraphicsDeviceManager graphics)
@@ -117,6 +125,9 @@ namespace Bomberbro.bomberman
             normalAnimationFrames.Add(new SpriteHelper(_playerTexture, normalFrame1Rectangle));
             _normalAnimation = new Animation(1000, normalAnimationFrames);
 
+
+            bombProtoType= new Bomb();
+            bombProtoType.LoadContent(content);
             _currentAnimation = _normalAnimation;
         }
 
@@ -150,10 +161,29 @@ namespace Bomberbro.bomberman
             return new Rectangle((int)(_position.X) + Convert.ToInt32(((_playerRectangle.Width * scale) - PlayerHitBoxWidth) / 2), (int)(_position.Y) + Convert.ToInt32((_playerRectangle.Height * scale) - PlayerHitBoxHeight -10), PlayerHitBoxWidth, PlayerHitBoxHeight);
         }
 
+        
+
+        public Vector2 GetCenterOfPositionedHitBox(float scale)
+        {
+            Point center = GetBombermanGuyPositionedHitBox(scale).Center;
+            return new Vector2(center.X,center.Y);
+        }
+
         public void Update(GameTime gameTime)
         {
             _currentAnimation.Update(gameTime);
+ 
 
+        }
+
+        /// <summary>
+        /// returns a bomb if it's possible and allowed, else returns null
+        /// </summary>
+        /// <returns>a bomb, or null of not allowed</returns>
+        public Bomb getBomb()
+        {
+            Bomb outputBomb = bombProtoType.copy();
+            return outputBomb;
         }
 
         public void setAnimation(playerAnimations animationType)

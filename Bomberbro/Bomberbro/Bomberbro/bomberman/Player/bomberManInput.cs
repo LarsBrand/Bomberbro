@@ -59,6 +59,11 @@ namespace Bomberbro.bomberman
                 //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X + 0.2f * gameTime.ElapsedGameTime.Milliseconds, _players[playerOne].Position.Y);
                 //position.X = position.X + 0.2f * gameTime.ElapsedGameTime.Milliseconds;
             }
+
+            if (Input.KeyboardSpaceJustPressed)
+            {
+                _gameField.PlaceBomb(_players[playerOne]);
+            }
             #endregion
         }
 
@@ -68,7 +73,7 @@ namespace Bomberbro.bomberman
             movement.OrigionalScreenPos = _players[playerNumber].Position;
             movement.OrigionalHitBox = _players[playerNumber].GetBombermanGuyPositionedHitBox(_gameField.FieldScale);
             movement.OriginalGamefieldPosition = _gameField.getPosistionOfRectInGrid(movement.OrigionalHitBox);
-
+            movement.PreviousHitBox = _players[playerNumber].BombermanGuyPositionedHitBoxPreviousUpdate;
 
             movement.DestinationScreenPos = new Vector2(movement.OrigionalScreenPos.X + movementX, movement.OrigionalScreenPos.Y + movementY);
             movement.DestinationHitBox = new Rectangle(movement.OrigionalHitBox.X + movementX, movement.OrigionalHitBox.Y + movementY, movement.OrigionalHitBox.Width, movement.OrigionalHitBox.Height);

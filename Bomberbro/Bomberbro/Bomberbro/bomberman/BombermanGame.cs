@@ -128,7 +128,9 @@ namespace Bomberbro.bomberman
             foreach (var bomberManGuy in _players)
             {
                 bomberManGuy.Update(gameTime);
+                bomberManGuy.BombermanGuyPositionedHitBoxPreviousUpdate = bomberManGuy.GetBombermanGuyPositionedHitBox(_gameField.FieldScale);
             }
+            _gameField.updateField(gameTime);
         }
 
         public void Draw(GameTime gameTime)
