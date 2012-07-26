@@ -73,8 +73,10 @@ namespace Bomberbro.bomberman
                     _explosionRightEnd.Render(rect);
                     break;
                 case ExplosionTypes.Cross:
-                default:
                     _explosionCross.Render(rect);
+                    break;                    
+                default:
+                    throw new Exception("none set");
                     break;
 
             }

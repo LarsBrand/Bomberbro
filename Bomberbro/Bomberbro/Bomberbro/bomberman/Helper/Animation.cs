@@ -13,6 +13,7 @@ namespace Bomberbro
        private int _currentFrame;
        private int _elapsedTime;
        private int _cycleSpeed;
+       private bool _playOnce;
        private List<SpriteHelper> _animationFrames; 
        
        /// <summary>
@@ -20,10 +21,11 @@ namespace Bomberbro
        /// </summary>
        /// <param name="cycleSpeed">in milliseconds</param>
        /// <param name="animationFrames">the frames</param>
-       public Animation(int cycleSpeed, List<SpriteHelper> animationFrames)
+       public Animation(int cycleSpeed, List<SpriteHelper> animationFrames, bool playonce=false)
        {
            _cycleSpeed = cycleSpeed;
            _animationFrames = animationFrames;
+           _playOnce = playonce;
        }
 
 
@@ -41,20 +43,47 @@ namespace Bomberbro
 
         public void Update(GameTime gameTime)
         {
-            _elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-
-            if (_elapsedTime > _cycleSpeed) //Reset it, and set the nexst frame
+            if (_playOnce)
             {
-                _elapsedTime -= _cycleSpeed;
-
-                _currentFrame++; //nexst frame
-                if (_currentFrame >= _animationFrames.Count) //it's the last animation
-                {
-                    _currentFrame = 0;
-                }
+                PlayOnceAnimationUpdate(gameTime);
+            }
+            else
+            {
+            ReapeatingAnimationUpdate(gameTime);                
             }
         }
 
+       private void ReapeatingAnimationUpdate(GameTime gameTime)
+       {
+           _elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+
+           if (_elapsedTime > _cycleSpeed) //Reset it, and set the nexst frame
+           {
+               _elapsedTime -= _cycleSpeed;
+
+               _currentFrame++; //nexst frame
+               if (_currentFrame >= _animationFrames.Count) //it's the last animation
+               {
+                   _currentFrame = 0;
+               }
+           }
+       }
+      
+       private void PlayOnceAnimationUpdate(GameTime gameTime)
+       {
+           _elapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+
+           if (_elapsedTime > _cycleSpeed) //Reset it, and set the nexst frame
+           {
+               _elapsedTime -= _cycleSpeed;
+
+               _currentFrame++; //nexst frame
+               if (_currentFrame >= _animationFrames.Count) //it's the last animation
+               {
+                   _currentFrame = AnimationFrames.Count - 1;
+               }
+           }
+       }
 
        public void Draw(Rectangle rectangle)
        {

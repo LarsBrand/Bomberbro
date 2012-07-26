@@ -12,8 +12,8 @@ namespace Bomberbro.bomberman
         {
             Vector2 newpoint = checkCollisionWithGameField(gameField, players[playerID], movement);
 
-            checkCollisionWithBombs();
-            checkCollisionWithPlayers();
+            CheckCollisionWithBombs();
+            CheckCollisionWithPlayers();
             return newpoint;
         }
 
@@ -34,20 +34,22 @@ namespace Bomberbro.bomberman
 
                             break;
                         case CollisionTypes.Bomb:
-                            if (wasPlayerOnThisPointPreviously(gameField, gamefieldPos.X, gamefieldPos.Y, movement))
+                            if (WasPlayerOnThisPointPreviously(gameField, gamefieldPos.X, gamefieldPos.Y, movement))
                             {
-
                                 newPosition = UnRestrictedWalk(newPosition,movement);
                             }
                             else
                             {
-
                                 newPosition = BlockMovement(gameField, movement, movementY, movementX, gamefieldPos);
                             }
                             break;
                         case CollisionTypes.PowerUp:
                             //something ellie
                             break;
+                        case CollisionTypes.Explosion:
+                            bomberManGuy.Dead = true;
+                            break;
+
                         case CollisionTypes.Empty:
                         default:
                             newPosition = UnRestrictedWalk(movement.DestinationScreenPos,movement);
@@ -65,10 +67,11 @@ namespace Bomberbro.bomberman
         /// Check if the player was at that point previus update, for when walking on and off a bomb
         /// </summary>
         /// <param name="gameField"></param>
-        /// <param name="movement"></param>
+        /// <param name="xPos"> </param>
+        /// <param name="yPos"> </param>
+        /// <param name="moveObject"> </param>
         /// <returns>true if the player was on that point previously. thus ignore the bomb</returns>
-
-        private static bool wasPlayerOnThisPointPreviously(GameField gameField, float xPos, float yPos, MoveObject moveObject)
+        private static bool WasPlayerOnThisPointPreviously(GameField gameField, float xPos, float yPos, MoveObject moveObject)
         {
             return gameField.wasPlayerOnThisPointPreviously(gameField, xPos, yPos, moveObject);
 
@@ -116,12 +119,12 @@ namespace Bomberbro.bomberman
             return newPosition;
         }
 
-        private static void checkCollisionWithPlayers()
+        private static void CheckCollisionWithPlayers()
         {
             //throw new NotImplementedException();
         }
 
-        private static void checkCollisionWithBombs()
+        private static void CheckCollisionWithBombs()
         {
             //throw new NotImplementedException();
         }

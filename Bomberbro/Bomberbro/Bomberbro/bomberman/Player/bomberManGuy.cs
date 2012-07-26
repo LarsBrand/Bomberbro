@@ -12,7 +12,7 @@ namespace Bomberbro.bomberman
     public class BomberManGuy
     {
 
-        Rectangle _playerRectangle = new Rectangle(6, 7, 63-6, 84-7 );
+        Rectangle _playerRectangle = new Rectangle(6, 7, 63 - 6, 84 - 7);
         private Texture2D _playerTexture;
         private SpriteHelper _player;
         private Vector2 _position;
@@ -20,8 +20,8 @@ namespace Bomberbro.bomberman
         private int _playerHitBoxHeight;
         private Bomb bombProtoType;
         private Rectangle _bombermanGuyPositionedHitBoxPreviousUpdate;
+        private bool _dead;
 
-        
         private Animation _currentAnimation;
         private Animation _idleAnimation;
         private Animation _leftAnimation;
@@ -55,6 +55,12 @@ namespace Bomberbro.bomberman
             set { _bombermanGuyPositionedHitBoxPreviousUpdate = value; }
         }
 
+        public bool Dead
+        {
+            get { return _dead; }
+            set { _dead = value; }
+        }
+
         public void LoadContent(ContentManager content, GraphicsDeviceManager graphics)
         {
 
@@ -66,32 +72,32 @@ namespace Bomberbro.bomberman
             _player = new SpriteHelper(_playerTexture, _playerRectangle);
 
             Rectangle idleFrame1Rectangle = new Rectangle(6, 7, 63 - 6, 84 - 7);
-            Rectangle idleFrame2Rectangle = new Rectangle(63, 7, 120-63, 84 - 7);
+            Rectangle idleFrame2Rectangle = new Rectangle(63, 7, 120 - 63, 84 - 7);
             List<SpriteHelper> idleAnimationFrames = new List<SpriteHelper>();
-            idleAnimationFrames.Add(new SpriteHelper(_playerTexture,idleFrame1Rectangle));
+            idleAnimationFrames.Add(new SpriteHelper(_playerTexture, idleFrame1Rectangle));
             idleAnimationFrames.Add(new SpriteHelper(_playerTexture, idleFrame2Rectangle));
             _idleAnimation = new Animation(300, idleAnimationFrames);
 
-            Rectangle leftFrame1Rectangle = new Rectangle(6,84,67-6,165-84);
-            Rectangle leftFrame2Rectangle = new Rectangle(68, 84, 129-68, 165 - 84);
-            Rectangle leftFrame3Rectangle = new Rectangle(129, 84, 189-129, 165 - 84);
+            Rectangle leftFrame1Rectangle = new Rectangle(6, 84, 67 - 6, 165 - 84);
+            Rectangle leftFrame2Rectangle = new Rectangle(68, 84, 129 - 68, 165 - 84);
+            Rectangle leftFrame3Rectangle = new Rectangle(129, 84, 189 - 129, 165 - 84);
             List<SpriteHelper> leftAnimationFrames = new List<SpriteHelper>();
-            leftAnimationFrames.Add(new SpriteHelper(_playerTexture,leftFrame1Rectangle));
-            leftAnimationFrames.Add(new SpriteHelper(_playerTexture,leftFrame2Rectangle));
+            leftAnimationFrames.Add(new SpriteHelper(_playerTexture, leftFrame1Rectangle));
+            leftAnimationFrames.Add(new SpriteHelper(_playerTexture, leftFrame2Rectangle));
             leftAnimationFrames.Add(new SpriteHelper(_playerTexture, leftFrame3Rectangle));
-            _leftAnimation= new Animation(190,leftAnimationFrames);
+            _leftAnimation = new Animation(190, leftAnimationFrames);
 
             Texture2D vertFlipPlayer = SpriteHelper.Flip(_playerTexture, false, true);
-            Rectangle rightFrame1Rectangle = new Rectangle(vertFlipPlayer.Width- 67, 84, 67 - 6, 165 - 84);
+            Rectangle rightFrame1Rectangle = new Rectangle(vertFlipPlayer.Width - 67, 84, 67 - 6, 165 - 84);
             Rectangle rightFrame2Rectangle = new Rectangle(vertFlipPlayer.Width - 129, 84, 129 - 68, 165 - 84);
-            Rectangle rightFrame3Rectangle = new Rectangle(vertFlipPlayer.Width- 189, 84, 189 - 129, 165 - 84);
+            Rectangle rightFrame3Rectangle = new Rectangle(vertFlipPlayer.Width - 189, 84, 189 - 129, 165 - 84);
             List<SpriteHelper> rightAnimationFrames = new List<SpriteHelper>();
             rightAnimationFrames.Add(new SpriteHelper(vertFlipPlayer, rightFrame1Rectangle));
             rightAnimationFrames.Add(new SpriteHelper(vertFlipPlayer, rightFrame2Rectangle));
             rightAnimationFrames.Add(new SpriteHelper(vertFlipPlayer, rightFrame3Rectangle));
             _rightAnimation = new Animation(190, rightAnimationFrames);
 
-            Rectangle downFrame1Rectangle = new Rectangle(6, 165, 65 - 6, 247 -165);
+            Rectangle downFrame1Rectangle = new Rectangle(6, 165, 65 - 6, 247 - 165);
             Rectangle downFrame2Rectangle = new Rectangle(65, 165, 124 - 65, 247 - 165);
             Rectangle downFrame3Rectangle = new Rectangle(124, 165, 183 - 124, 247 - 165);
             List<SpriteHelper> downAnimationFrames = new List<SpriteHelper>();
@@ -112,13 +118,13 @@ namespace Bomberbro.bomberman
             Rectangle deadFrame1Rectangle = new Rectangle(6, 328, 79 - 6, 408 - 328);
             Rectangle deadFrame2Rectangle = new Rectangle(79, 328, 152 - 79, 408 - 328);
             Rectangle deadFrame3Rectangle = new Rectangle(152, 328, 225 - 152, 408 - 328);
-            Rectangle deadFrame4Rectangle = new Rectangle(225, 328, 299-225 , 408 - 328);
+            Rectangle deadFrame4Rectangle = new Rectangle(225, 328, 299 - 225, 408 - 328);
             List<SpriteHelper> deadAnimationFrames = new List<SpriteHelper>();
             deadAnimationFrames.Add(new SpriteHelper(_playerTexture, deadFrame1Rectangle));
             deadAnimationFrames.Add(new SpriteHelper(_playerTexture, deadFrame2Rectangle));
             deadAnimationFrames.Add(new SpriteHelper(_playerTexture, deadFrame3Rectangle));
-            deadAnimationFrames.Add(new SpriteHelper(_playerTexture,deadFrame4Rectangle));
-            _deadAnimation = new Animation(190, deadAnimationFrames);
+            deadAnimationFrames.Add(new SpriteHelper(_playerTexture, deadFrame4Rectangle));
+            _deadAnimation = new Animation(190, deadAnimationFrames,true);
 
             Rectangle normalFrame1Rectangle = new Rectangle(6, 7, 63 - 6, 84 - 7);
             List<SpriteHelper> normalAnimationFrames = new List<SpriteHelper>();
@@ -126,7 +132,7 @@ namespace Bomberbro.bomberman
             _normalAnimation = new Animation(1000, normalAnimationFrames);
 
 
-            bombProtoType= new Bomb();
+            bombProtoType = new Bomb();
             bombProtoType.LoadContent(content);
             _currentAnimation = _normalAnimation;
         }
@@ -143,7 +149,7 @@ namespace Bomberbro.bomberman
 
             _currentAnimation.Draw(new Rectangle(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y), Convert.ToInt32(_playerRectangle.Width * scale), Convert.ToInt32(_playerRectangle.Height * scale)));
             //drawHitBox(scale);
-            
+
         }
 
         private Texture2D _hitBoxTexture;
@@ -158,21 +164,21 @@ namespace Bomberbro.bomberman
 
         public Rectangle GetBombermanGuyPositionedHitBox(float scale)
         {
-            return new Rectangle((int)(_position.X) + Convert.ToInt32(((_playerRectangle.Width * scale) - PlayerHitBoxWidth) / 2), (int)(_position.Y) + Convert.ToInt32((_playerRectangle.Height * scale) - PlayerHitBoxHeight -10), PlayerHitBoxWidth, PlayerHitBoxHeight);
+            return new Rectangle((int)(_position.X) + Convert.ToInt32(((_playerRectangle.Width * scale) - PlayerHitBoxWidth) / 2), (int)(_position.Y) + Convert.ToInt32((_playerRectangle.Height * scale) - PlayerHitBoxHeight - 10), PlayerHitBoxWidth, PlayerHitBoxHeight);
         }
 
-        
+
 
         public Vector2 GetCenterOfPositionedHitBox(float scale)
         {
             Point center = GetBombermanGuyPositionedHitBox(scale).Center;
-            return new Vector2(center.X,center.Y);
+            return new Vector2(center.X, center.Y);
         }
 
         public void Update(GameTime gameTime)
         {
             _currentAnimation.Update(gameTime);
- 
+
 
         }
 
@@ -186,7 +192,7 @@ namespace Bomberbro.bomberman
             return outputBomb;
         }
 
-        public void setAnimation(playerAnimations animationType)
+        public void SetAnimation(playerAnimations animationType)
         {
             switch (animationType)
             {
@@ -214,11 +220,12 @@ namespace Bomberbro.bomberman
                 default:
                     throw new ArgumentOutOfRangeException("animationType");
             }
+
         }
     }
 
     public enum playerAnimations
     {
-        normal,idle,up,down,left,right,dead
+        normal, idle, up, down, left, right, dead
     }
 }

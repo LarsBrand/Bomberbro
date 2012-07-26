@@ -22,48 +22,61 @@ namespace Bomberbro.bomberman
         {
             #region player one
             int playerOne = 0;
-            
-            _players[playerOne].setAnimation(playerAnimations.normal);
-            if (Input.KeyboardDownPressed)
-            {
-                int movementY = Convert.ToInt32(0.2f * gameTime.ElapsedGameTime.Milliseconds);
-                var movement = CreateMoveObject(playerOne, 0, movementY);
-                _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
-                _players[playerOne].setAnimation(playerAnimations.down);
-                //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X, _players[playerOne].Position.Y + 0.2f * gameTime.ElapsedGameTime.Milliseconds);
-            }
-            if (Input.KeyboardUpPressed)
-            {
-                int movementY = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds) * -1);
-                var movement = CreateMoveObject(playerOne, 0, movementY);
-                _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
-                _players[playerOne].setAnimation(playerAnimations.up);
-                //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X, _players[playerOne].Position.Y - 0.2f * gameTime.ElapsedGameTime.Milliseconds);
-            }
-            if (Input.KeyboardLeftPressed)
-            {
 
-                int movementX = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds)*-1);
-                var movement = CreateMoveObject(playerOne, movementX, 0);
-                _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
-                _players[playerOne].setAnimation(playerAnimations.left);
-                //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X - 0.2f * gameTime.ElapsedGameTime.Milliseconds, _players[playerOne].Position.Y);
-                //position.X = position.X - 0.2f * gameTime.ElapsedGameTime.Milliseconds;
-            }
-            if (Input.KeyboardRightPressed)
+            _players[playerOne].SetAnimation(playerAnimations.normal);
+            if (_players[playerOne].Dead)
             {
-                int movementX = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds) );
-                var movement = CreateMoveObject(playerOne, movementX, 0);
-                _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
-                _players[playerOne].setAnimation(playerAnimations.right);
-                //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X + 0.2f * gameTime.ElapsedGameTime.Milliseconds, _players[playerOne].Position.Y);
-                //position.X = position.X + 0.2f * gameTime.ElapsedGameTime.Milliseconds;
+                _players[playerOne].SetAnimation(playerAnimations.dead);
+
+                if (Input.KeyboardSpaceJustPressed)
+                {
+                    _players[playerOne].Dead=false;
+                }
+            }
+            else
+            {
+                if (Input.KeyboardDownPressed)
+                {
+                    int movementY = Convert.ToInt32(0.2f * gameTime.ElapsedGameTime.Milliseconds);
+                    var movement = CreateMoveObject(playerOne, 0, movementY);
+                    _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
+                    _players[playerOne].SetAnimation(playerAnimations.down);
+                    //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X, _players[playerOne].Position.Y + 0.2f * gameTime.ElapsedGameTime.Milliseconds);
+                }
+                if (Input.KeyboardUpPressed)
+                {
+                    int movementY = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds) * -1);
+                    var movement = CreateMoveObject(playerOne, 0, movementY);
+                    _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
+                    _players[playerOne].SetAnimation(playerAnimations.up);
+                    //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X, _players[playerOne].Position.Y - 0.2f * gameTime.ElapsedGameTime.Milliseconds);
+                }
+                if (Input.KeyboardLeftPressed)
+                {
+
+                    int movementX = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds) * -1);
+                    var movement = CreateMoveObject(playerOne, movementX, 0);
+                    _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
+                    _players[playerOne].SetAnimation(playerAnimations.left);
+                    //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X - 0.2f * gameTime.ElapsedGameTime.Milliseconds, _players[playerOne].Position.Y);
+                    //position.X = position.X - 0.2f * gameTime.ElapsedGameTime.Milliseconds;
+                }
+                if (Input.KeyboardRightPressed)
+                {
+                    int movementX = Convert.ToInt32((0.2f * gameTime.ElapsedGameTime.Milliseconds));
+                    var movement = CreateMoveObject(playerOne, movementX, 0);
+                    _players[playerOne].Position = CollisionChecker.CheckPlayerMovement(_gameField, _players, playerOne, movement);
+                    _players[playerOne].SetAnimation(playerAnimations.right);
+                    //_players[playerOne].Position = new Vector2(_players[playerOne].Position.X + 0.2f * gameTime.ElapsedGameTime.Milliseconds, _players[playerOne].Position.Y);
+                    //position.X = position.X + 0.2f * gameTime.ElapsedGameTime.Milliseconds;
+                }
+
+                if (Input.KeyboardSpaceJustPressed)
+                {
+                    _gameField.PlaceBomb(_players[playerOne]);
+                }
             }
 
-            if (Input.KeyboardSpaceJustPressed)
-            {
-                _gameField.PlaceBomb(_players[playerOne]);
-            }
             #endregion
         }
 
