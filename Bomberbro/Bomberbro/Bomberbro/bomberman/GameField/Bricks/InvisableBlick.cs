@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberbro.bomberman
 {
-    public class InvisableBlock :Brick
+    public class InvisableBlick :Brick
     {
-        public InvisableBlock() : base()
+        public InvisableBlick() : base()
         {
             
         }

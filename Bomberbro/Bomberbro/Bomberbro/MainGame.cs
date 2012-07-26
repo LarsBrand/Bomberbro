@@ -32,7 +32,7 @@ namespace Bomberbro
             Content.RootDirectory = "Content";
            _game = new BombermanGame(Content, _graphics);
             //_game= new FontTest(Content,_graphics);
-            //_game= new SpriteTurningTest(Content,_graphics);
+           // _game= new SpriteTurningTest(Content,_graphics);
         }
 
         /// <summary>
