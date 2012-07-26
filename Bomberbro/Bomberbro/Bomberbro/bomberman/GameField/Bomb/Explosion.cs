@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Bomberbro.bomberman
 {
-    public class Explosion: GamefieldItem
+    public class Explosion : GamefieldItem
     {
         private SpriteHelper _explosionCross;
         private SpriteHelper _explosionRight;
@@ -22,11 +22,26 @@ namespace Bomberbro.bomberman
         private SpriteHelper _explosionDownEnd;
 
         private ExplosionTypes _explosionType;
+        private int _explosionTime;
+        bool _fixedExplosionType;
+
+        public bool CanRemove
+        {
+            get { return (_explosionTime <= 0); }
+        }
+
 
         public ExplosionTypes ExplosionType
         {
             get { return _explosionType; }
-            set { _explosionType = value; }
+            set
+            {
+                if (!_fixedExplosionType)
+                {
+                    _explosionType = value;
+
+                }
+            }
         }
 
         public override void Draw(Rectangle rect, GameTime gameTime)
@@ -57,11 +72,11 @@ namespace Bomberbro.bomberman
                 case ExplosionTypes.RightEnd:
                     _explosionRightEnd.Render(rect);
                     break;
-                case ExplosionTypes.Cross:   
+                case ExplosionTypes.Cross:
                 default:
                     _explosionCross.Render(rect);
                     break;
-                    
+
             }
         }
 
@@ -69,7 +84,7 @@ namespace Bomberbro.bomberman
 
         public override void Update(GameTime gameTime)
         {
-            
+            _explosionTime -= gameTime.ElapsedGameTime.Milliseconds;
         }
 
 
@@ -77,43 +92,42 @@ namespace Bomberbro.bomberman
         public override void LoadContent(ContentManager content)
         {
             Texture2D explosionTexture = content.Load<Texture2D>("fire");
-           Rectangle explosionCrossRectangle = new Rectangle(9, 9, 70 - 9, 70 - 9);
+            Rectangle explosionCrossRectangle = new Rectangle(10, 10, 69 - 10, 69 - 10);
             _explosionCross = new SpriteHelper(explosionTexture, explosionCrossRectangle);
 
-            Rectangle explosionRightRectangle = new Rectangle(70, 9, 131 - 70, 70 - 9);
+            Rectangle explosionRightRectangle = new Rectangle(71, 10, 130 - 71, 69 - 10);
             _explosionRight = new SpriteHelper(explosionTexture, explosionRightRectangle);
-            Rectangle explosionRightEndRectangle = new Rectangle(131, 9, 192 - 131, 70 - 10);
+            Rectangle explosionRightEndRectangle = new Rectangle(132, 10, 191 - 132, 69 - 10);
             _explosionRightEnd = new SpriteHelper(explosionTexture, explosionRightEndRectangle);
 
             Texture2D explosionTextureLeft = SpriteHelper.Flip(explosionTexture, false, true);
-            Rectangle explosionLeftRectangle = new Rectangle(explosionTextureLeft.Width - 131, 9, 131 - 70, 70 - 9);
+            Rectangle explosionLeftRectangle = new Rectangle(explosionTextureLeft.Width - 130, 10, 130 - 71, 69 - 10);
             _explosionLeft = new SpriteHelper(explosionTextureLeft, explosionLeftRectangle);
-            Rectangle explosionLeftEndRectangle = new Rectangle(explosionTextureLeft.Width - 192, 9, 192 - 131, 70 - 9);
+            Rectangle explosionLeftEndRectangle = new Rectangle(explosionTextureLeft.Width - 191, 10, 191 - 132, 69 - 10);
             _explosionLeftEnd = new SpriteHelper(explosionTextureLeft, explosionLeftEndRectangle);
 
             Texture2D explosionTextureDown = SpriteHelper.RotateTexture90Degrees(explosionTexture);
-            Rectangle explosionDownRectangle = new Rectangle(9, 70, 70 - 9, 131 - 70);
+            Rectangle explosionDownRectangle = new Rectangle(10, 71, 69 - 10, 130 - 71);
             _explosionDown = new SpriteHelper(explosionTextureDown, explosionDownRectangle);
-            Rectangle explosionDownEndRectangle = new Rectangle(9, 131, 70 - 9, 192 - 131);
+            Rectangle explosionDownEndRectangle = new Rectangle(10, 132, 69 - 10, 191 - 132);
             _explosionDownEnd = new SpriteHelper(explosionTextureDown, explosionDownEndRectangle);
 
             Texture2D explosionTextureUp = SpriteHelper.Flip(explosionTextureDown, true, false);
-            Rectangle explosionUpRectangle = new Rectangle(9, explosionTextureUp.Height - 131, 70 - 9, 131 - 70);
+            Rectangle explosionUpRectangle = new Rectangle(10, explosionTextureUp.Height - 130, 69 - 10, 130 - 71);
             _explosionUp = new SpriteHelper(explosionTextureUp, explosionUpRectangle);
-            Rectangle explosionUpEndRectangle = new Rectangle(9, explosionTextureUp.Height - 192, 70 - 9, 192 - 131);
+            Rectangle explosionUpEndRectangle = new Rectangle(10, explosionTextureUp.Height - 191, 69 - 10, 191 - 132);
             _explosionUpEnd = new SpriteHelper(explosionTextureUp, explosionUpEndRectangle);
 
             CollisionType = CollisionTypes.Explosion;
-            
+            _explosionTime = 2500;
 
         }
-
-        public Explosion Copy()
+        public Explosion Copy(ExplosionTypes explosionType)
         {
             Explosion output = new Explosion();
-            output._explosionType = _explosionType;
+            output._explosionType = explosionType;
             output.CollisionType = CollisionType;
-
+            output._fixedExplosionType = true;
 
             output._explosionCross = _explosionCross;
             output._explosionDown = _explosionDown;
@@ -124,11 +138,21 @@ namespace Bomberbro.bomberman
             output._explosionRightEnd = _explosionRightEnd;
             output._explosionUp = _explosionUp;
             output._explosionUpEnd = _explosionUpEnd;
+            output._explosionTime = _explosionTime;
+            
+            return output;
+        }
+
+        public Explosion Copy()
+        {
+            Explosion output = Copy(_explosionType);
+            output._fixedExplosionType = false;
+
             return output;
         }
     }
     public enum ExplosionTypes
     {
-        Cross,Up,Down,Left,Right,UpEnd,DownEnd,LeftEnd,RightEnd
+        Cross, Up, Down, Left, Right, UpEnd, DownEnd, LeftEnd, RightEnd
     }
 }

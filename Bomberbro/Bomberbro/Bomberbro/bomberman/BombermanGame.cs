@@ -85,7 +85,7 @@ namespace Bomberbro.bomberman
                 }
             }
             List<GamefieldItem> brickBorderItem = new List<GamefieldItem>();
-            brickBorderItem.Add(new InvisableBlock());
+            brickBorderItem.Add(new InvisableBlick());
             GamefieldItems brickBorderItems = new GamefieldItems(brickBorderItem);
 
             for (int i = 0; i < sizeX; i++)

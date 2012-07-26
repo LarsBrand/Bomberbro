@@ -83,7 +83,7 @@
     <Compile Include="bomberman\GameField\GameField.cs" />
     <Compile Include="bomberman\Player\bomberManGuy.cs" />
     <Compile Include="bomberman\Helper\IGameState.cs" />
-    <Compile Include="bomberman\GameField\Bricks\InvisableBlock.cs" />
+    <Compile Include="bomberman\GameField\Bricks\InvisableBlick.cs" />
     <Compile Include="Helpers\ColorHelper.cs" />
     <Compile Include="Helpers\DisposeHelper.cs" />
     <Compile Include="Helpers\EnumHelper.cs" />

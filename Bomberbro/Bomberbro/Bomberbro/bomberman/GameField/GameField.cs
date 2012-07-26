@@ -244,7 +244,7 @@ namespace Bomberbro.bomberman
             {
                 for (int xPoint = 0; xPoint < xLenght; xPoint++)
                 {
-                    _gamefield[xPoint, yPoint].updateAllItems(gameTime);
+                    _gamefield[xPoint, yPoint].UpdateAllItems(gameTime);
                 }
             }
             //remove bombs
@@ -252,7 +252,7 @@ namespace Bomberbro.bomberman
             {
                 for (int xPoint = 0; xPoint < xLenght; xPoint++)
                 {
-                    Bomb placedBomb = _gamefield[xPoint, yPoint].getBomb();
+                    Bomb placedBomb = _gamefield[xPoint, yPoint].GetBomb();
                     if (placedBomb != null)
                     {
                         if (placedBomb.Exploded)
@@ -268,88 +268,207 @@ namespace Bomberbro.bomberman
             {
                 for (int xPoint = 0; xPoint < xLenght; xPoint++)
                 {
-                    Explosion explosion = _gamefield[xPoint, yPoint].getExplosion();
+                    Explosion explosion = _gamefield[xPoint, yPoint].GetExplosion();
                     if (explosion != null)
-                    {//set correct explosiontype
-                        bool up = false, down = false, left = false, right = false;
-
-
-                        if (xPoint - 1 > 0 && _gamefield[xPoint - 1, yPoint].getExplosion() != null)
-                        {
-                            left = true;
-                        }
-                        if (xPoint + 1 < _gamefield.GetLength(0) && _gamefield[xPoint + 1, yPoint].getExplosion() != null)
-                        {
-                            right = true;
-                        }
-                        if (yPoint - 1 > 0 && _gamefield[xPoint, yPoint - 1].getExplosion() != null)
-                        {
-                            up = true;
-                        }
-                        if (yPoint + 1 < _gamefield.GetLength(1) && _gamefield[xPoint, yPoint + 1].getExplosion() != null)
-                        {
-                            down = true;
-                        }
-
-                        if (up && down && left && right)
-                        {
-                            explosion.ExplosionType = ExplosionTypes.Cross;
+                    {
+                        if (explosion.CanRemove)
+                        {//Explosion can be removed
+                            _gamefield[xPoint, yPoint].Items.Remove(explosion);
                         }
                         else
-                        {
-                            if (up && !down)
+                        {//set the correct explosion type
+
+                            bool up = false, down = false, left = false, right = false;
+
+
+                            if (xPoint - 1 > 0 && _gamefield[xPoint - 1, yPoint].GetExplosion() != null)
                             {
-                                explosion.ExplosionType = ExplosionTypes.DownEnd;
+                                left = true;
                             }
-                            else if (up)
+                            if (xPoint + 1 < _gamefield.GetLength(0) && _gamefield[xPoint + 1, yPoint].GetExplosion() != null)
                             {
-                                explosion.ExplosionType = ExplosionTypes.Down;
+                                right = true;
+                            }
+                            if (yPoint - 1 > 0 && _gamefield[xPoint, yPoint - 1].GetExplosion() != null)
+                            {
+                                up = true;
+                            }
+                            if (yPoint + 1 < _gamefield.GetLength(1) && _gamefield[xPoint, yPoint + 1].GetExplosion() != null)
+                            {
+                                down = true;
                             }
 
-                            if (down && !up)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.UpEnd;
-                            }
-                            else if (down)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.Up;
-                            }
-                            if (left && !right)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.RightEnd;
-                            }
-                            else if (left)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.Right;
-                            }
-                            if (right&&!left)
-                            {
-                                explosion.ExplosionType=ExplosionTypes.LeftEnd;
-                            }
-                            else if (right)
-                            {
-                                explosion.ExplosionType=ExplosionTypes.Left;
-                            }
-                            {
-                                
-                            }
-
+                            GetCorrectExplosionStyle(xPoint, yPoint, right, left, up, down, explosion);
                         }
                     }
                 }
             }
         }
 
+        private void GetCorrectExplosionStyle(int xPoint, int yPoint, bool right, bool left, bool up, bool down, Explosion explosion)
+        {
+            if (up && down && left && right)
+            {
+                explosion.ExplosionType = ExplosionTypes.Cross;
+            }
+            else
+            {
+                if (up && !down)
+                {
+                    explosion.ExplosionType = ExplosionTypes.DownEnd;
+                }
+                else if (down && !up)
+                {
+                    explosion.ExplosionType = ExplosionTypes.UpEnd;
+                }
+                if (up && down)
+                {
+
+                    if (FindExplosionCross(true, xPoint, yPoint, explosion))
+                    {
+                        explosion.ExplosionType = ExplosionTypes.Up;
+                    }
+                    else
+                    {
+                        explosion.ExplosionType = ExplosionTypes.Down;
+                    }
+                }
+
+
+                if (left && !right)
+                {
+                    explosion.ExplosionType = ExplosionTypes.RightEnd;
+                }
+                else if (right && !left)
+                {
+                    explosion.ExplosionType = ExplosionTypes.LeftEnd;
+                }
+                if (left && right)
+                {
+                    if (FindExplosionCross(false, xPoint, yPoint, explosion))
+                    {
+                        explosion.ExplosionType = ExplosionTypes.Left;
+                    }
+                    else
+                    {
+                        explosion.ExplosionType = ExplosionTypes.Right;
+                    }
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Look for the explosioncross to set the correct explosion type
+        /// </summary>
+        /// <param name="UpDown">Search up down or left right</param>
+        /// <param name="xPoint"> </param>
+        /// <param name="yPoint"> </param>
+        /// <param name="explosion">the explosion</param>
+        /// <returns>true for cross is down or left, flase for cross is up or right </returns>
+        private bool FindExplosionCross(bool UpDown, int xPoint, int yPoint, Explosion explosion)
+        {
+            if (UpDown)
+            {
+                for (int i = yPoint; i > 0; i--)
+                {
+                    Explosion possibleCrossExplosion = _gamefield[xPoint, i].GetExplosion();
+                    if (possibleCrossExplosion != null)
+                    {
+                        if (possibleCrossExplosion.ExplosionType == ExplosionTypes.Cross)
+                        {//we found the cross in above us,
+                            return false;
+                        }
+
+                    }
+                }
+                //we haven't returned for values above us, the cross must be downwards.
+                return true;
+            }
+            else
+            {
+                for (int i = xPoint; i > 0; i--)
+                {
+                    Explosion possibleCrossExplosion = _gamefield[i, yPoint].GetExplosion();
+                    if (possibleCrossExplosion != null)
+                    {
+                        if (possibleCrossExplosion.ExplosionType == ExplosionTypes.Cross)
+                        {//we found the cross on the right from us,
+                            return false;
+                        }
+
+                    }
+                }
+                //we haven't returned for values right us, the cross must be on our left.
+                return true;
+            }
+        }
+
         private void CreateExplosion(Bomb placedBomb, int xPoint, int yPoint)
         {
-            _gamefield[xPoint, yPoint].Items.Add(_explosionProtoType.Copy());
+            _gamefield[xPoint, yPoint].Items.Add(_explosionProtoType.Copy(ExplosionTypes.Cross));
+            bool stopDown = false, stopUp = false, stopLeft = false, stopRight = false;
 
             for (int i = 1; i <= placedBomb.Power; i++)
             {
-                _gamefield[xPoint + i, yPoint].Items.Add(_explosionProtoType.Copy());
-                _gamefield[xPoint - i, yPoint].Items.Add(_explosionProtoType.Copy());
-                _gamefield[xPoint, yPoint + i].Items.Add(_explosionProtoType.Copy());
-                _gamefield[xPoint, yPoint - i].Items.Add(_explosionProtoType.Copy());
+
+                if (xPoint - i < 0)
+                {
+                    stopLeft = true;
+                }
+                else
+                {
+                    Brick brick = _gamefield[xPoint - i, yPoint].GetBrick();
+                    if (brick != null && brick.CollisionType == CollisionTypes.Block)
+                    {
+                        stopLeft = true;
+                    }
+                }
+                if (yPoint - i < 0)
+                {
+                    stopUp = true;
+                }
+                else
+                {
+                    Brick brick = _gamefield[xPoint, yPoint - i].GetBrick();
+                    if (brick != null && brick.CollisionType == CollisionTypes.Block)
+                    {
+                        stopUp = true;
+                    }
+                }
+                if (xPoint + i > _gamefield.GetLength(0) - 1)
+                {
+                    stopRight = true;
+                }
+                else
+                {
+                    Brick brick = _gamefield[xPoint + i, yPoint].GetBrick();
+                    if (brick != null && brick.CollisionType == CollisionTypes.Block)
+                    {
+                        stopRight = true;
+                    }
+                }
+                if (yPoint + i > _gamefield.GetLength(1) - 1)
+                {
+                    stopDown = true;
+                }
+                else
+                {
+                    Brick brick = _gamefield[xPoint, yPoint + i].GetBrick();
+                    if (brick != null && brick.CollisionType == CollisionTypes.Block)
+                    {
+                        stopDown = true;
+                    }
+                }
+
+                if (!stopRight)
+                    _gamefield[xPoint + i, yPoint].Items.Add(_explosionProtoType.Copy());
+                if (!stopLeft)
+                    _gamefield[xPoint - i, yPoint].Items.Add(_explosionProtoType.Copy());
+                if (!stopDown)
+                    _gamefield[xPoint, yPoint + i].Items.Add(_explosionProtoType.Copy());
+                if (!stopUp)
+                    _gamefield[xPoint, yPoint - i].Items.Add(_explosionProtoType.Copy());
             }
 
         }
@@ -411,7 +530,7 @@ namespace Bomberbro.bomberman
                 gamefieldItem.LoadContent(content);
             }
         }
-        public void updateAllItems(GameTime gameTime)
+        public void UpdateAllItems(GameTime gameTime)
         {
             foreach (var gamefieldItem in Items)
             {
@@ -419,7 +538,7 @@ namespace Bomberbro.bomberman
             }
         }
 
-        public Bomb getBomb()
+        public Bomb GetBomb()
         {
             foreach (GamefieldItem gamefieldItem in Items)
             {
@@ -431,13 +550,25 @@ namespace Bomberbro.bomberman
             return null;
         }
 
-        public Explosion getExplosion()
+        public Explosion GetExplosion()
         {
             foreach (GamefieldItem gamefieldItem in Items)
             {
                 if (gamefieldItem.GetType() == typeof(Explosion))
                 {
                     return (Explosion)gamefieldItem;
+                }
+            }
+            return null;
+        }
+
+        public Brick GetBrick()
+        {
+            foreach (GamefieldItem gamefieldItem in Items)
+            {
+                if (gamefieldItem is Brick)
+                {
+                    return (Brick)gamefieldItem;
                 }
             }
             return null;
