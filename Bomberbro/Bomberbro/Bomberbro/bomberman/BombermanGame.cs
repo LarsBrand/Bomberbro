@@ -20,13 +20,14 @@ namespace Bomberbro.bomberman
         private ContentManager _content;
         private int _width, _height;
 
-        private static Rectangle
-            _backgroundRectangle = new Rectangle(0, 0, 840, 690);
+        private static Rectangle _backgroundRectangle = new Rectangle(0, 0, 840, 690);
+        private static Rectangle _backgroundFancifyBarRectangle = new Rectangle(0,660,840,690-660);
 
 
 
         private Texture2D _backgroundTexture;
-        private Helpers.SpriteHelper _background;
+        private SpriteHelper _background;
+        private SpriteHelper _backgroundFacifyBar;
         private Vector2 _fieldSize;
         private Vector2 _totalSize;
         private Vector2 _fieldPosition;
@@ -58,10 +59,10 @@ namespace Bomberbro.bomberman
 
             _players = new List<BomberManGuy>();
             _players.Add(new BomberManGuy());
-            _players[0].PlayerHitBoxHeight =Convert.ToInt32( _gameField.BlockHeight*0.8f);
-            _players[0].PlayerHitBoxWidth = Convert.ToInt32(_gameField.BlockWidth*0.8f);
+            _players[0].PlayerHitBoxHeight = Convert.ToInt32(_gameField.BlockHeight * 0.8f);
+            _players[0].PlayerHitBoxWidth = Convert.ToInt32(_gameField.BlockWidth * 0.8f);
 
-            _players[0].Position = new Vector2((_fieldPosition.X + _gameField.BlockWidth) +1, (_fieldPosition.Y + _gameField.BlockHeight) + 1);
+            _players[0].Position = new Vector2((_fieldPosition.X + _gameField.BlockWidth) + 1, (_fieldPosition.Y + _gameField.BlockHeight) + 1);
 
             _bomberManInput = new BomberManInput(_players, _gameField);
         }
@@ -77,9 +78,17 @@ namespace Bomberbro.bomberman
                 for (int j = 0; j < sizeY; j++)
                 {
                     List<GamefieldItem> items = new List<GamefieldItem>();
-                    if (i % 2 == 0 && j % 2 == 0)
-                        items.Add(new BrickSollid());
+                    if ((!(i == 1 && j == 1) ^ !(i == 1 && j == 2) ^ !(i == 2 && j == 1)))
+                    {
+                        if ((!(i == sizeX - 2 && j == sizeY - 2) ^ !(i == sizeX - 3 && j == sizeY - 2) ^ !(i == sizeX - 2 && j == sizeY - 3)))
+                        {
+                            if (i % 2 == 0 && j % 2 == 0)
+                                items.Add(new BrickSollid());
+                            else
+                                items.Add(new BrickBreakAble());
+                        }
 
+                    }
                     GamefieldItems gamefieldItems = new GamefieldItems(items);
                     buildingField[i, j] = gamefieldItems;
                 }
@@ -105,11 +114,12 @@ namespace Bomberbro.bomberman
         {
             _backgroundTexture = _content.Load<Texture2D>("layout_level_empty");
             _background = new SpriteHelper(_backgroundTexture, _backgroundRectangle);
-
+            _backgroundFacifyBar = new SpriteHelper(_backgroundTexture, _backgroundFancifyBarRectangle);
+            
 
             foreach (var bomberManGuy in _players)
             {
-                bomberManGuy.LoadContent(_content,_graphics);
+                bomberManGuy.LoadContent(_content, _graphics);
             }
             _gameField.LoadAllFieldContent(_content, _graphics);
 
@@ -130,7 +140,7 @@ namespace Bomberbro.bomberman
                 bomberManGuy.Update(gameTime);
                 bomberManGuy.BombermanGuyPositionedHitBoxPreviousUpdate = bomberManGuy.GetBombermanGuyPositionedHitBox(_gameField.FieldScale);
             }
-            _gameField.updateField(gameTime,_players);
+            _gameField.updateField(gameTime, _players);
         }
 
         public void Draw(GameTime gameTime)
@@ -145,6 +155,8 @@ namespace Bomberbro.bomberman
             //    bomberManGuy.draw();
             //}
             SpriteHelper.DrawSprites(_width, _height);
+            _backgroundFacifyBar.Render(_backgroundFancifyBarRectangle);
+            SpriteHelper.DrawSprites(_width,_height);
 
         }
     }

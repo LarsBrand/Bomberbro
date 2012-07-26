@@ -26,6 +26,7 @@ namespace Bomberbro.bomberman
                 {
                     switch (gamefieldItem.CollisionType)
                     {
+                        case CollisionTypes.BlockBreakable:
                         case CollisionTypes.Block:
                             newPosition = BlockMovement(gameField, movement, movementY, movementX, gamefieldPos);
 

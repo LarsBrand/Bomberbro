@@ -121,7 +121,7 @@ namespace Bomberbro.bomberman
             _explosionUpEnd = new SpriteHelper(explosionTextureUp, explosionUpEndRectangle);
 
             CollisionType = CollisionTypes.Explosion;
-            _explosionTime = 2500;
+            _explosionTime = 1500;
 
         }
         public Explosion Copy(ExplosionTypes explosionType)

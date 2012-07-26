@@ -309,6 +309,15 @@ namespace Bomberbro.bomberman
                             }
                         }
                     }
+                     Brick possibleDestroyedBrick = _gamefield[xPoint, yPoint].GetBrick();
+                    if (possibleDestroyedBrick is BrickBreakAble)
+                    {
+                        if (((BrickBreakAble)possibleDestroyedBrick).Destroyed)
+                        {
+                            _gamefield[xPoint, yPoint].Items.Remove(possibleDestroyedBrick);
+                        }
+                    }
+
                 }
             }
         }
@@ -438,7 +447,7 @@ namespace Bomberbro.bomberman
             for (int i = 1; i <= placedBomb.Power; i++)
             {
 
-                SetStopsForExplosion(xPoint, yPoint, i, ref stopLeft, ref stopDown, ref stopUp, ref stopRight);
+                HandleBricksforExplosion(xPoint, yPoint, i, ref stopLeft, ref stopDown, ref stopUp, ref stopRight);
 
                 if (!stopRight)
                 {
@@ -475,7 +484,7 @@ namespace Bomberbro.bomberman
             }
         }
 
-        private void SetStopsForExplosion(int xPoint, int yPoint, int i, ref bool stopLeft, ref bool stopDown, ref bool stopUp, ref bool stopRight)
+        private void HandleBricksforExplosion(int xPoint, int yPoint, int i, ref bool stopLeft, ref bool stopDown, ref bool stopUp, ref bool stopRight)
         {
             if (xPoint - i < 0)
             {
@@ -483,8 +492,7 @@ namespace Bomberbro.bomberman
             }
             else
             {
-                //We're using this notation to keep the value of original boolean, in case our method returns false
-                stopLeft = StopExplosionOnBrick(xPoint - i, yPoint) || stopLeft;
+                stopLeft = StopExplosionOnBrick(xPoint - i, yPoint, stopLeft);
             }
             if (yPoint - i < 0)
             {
@@ -492,7 +500,7 @@ namespace Bomberbro.bomberman
             }
             else
             {
-                stopUp = StopExplosionOnBrick(xPoint, yPoint - i) || stopUp;
+                stopUp = StopExplosionOnBrick(xPoint, yPoint - i, stopUp);
             }
             if (xPoint + i > _gamefield.GetLength(0) - 1)
             {
@@ -500,7 +508,7 @@ namespace Bomberbro.bomberman
             }
             else
             {
-                stopRight = StopExplosionOnBrick(xPoint + i, yPoint) || stopRight;
+                stopRight = StopExplosionOnBrick(xPoint + i, yPoint, stopRight);
             }
             if (yPoint + i > _gamefield.GetLength(1) - 1)
             {
@@ -508,17 +516,31 @@ namespace Bomberbro.bomberman
             }
             else
             {
-                stopDown = StopExplosionOnBrick(xPoint, yPoint + i) || stopDown;
+                stopDown = StopExplosionOnBrick(xPoint, yPoint + i, stopDown);
             }
         }
 
-        private bool StopExplosionOnBrick(int xPoint, int yPoint)
+        private bool StopExplosionOnBrick(int xPoint, int yPoint, bool stop)
         {
-            bool stop = false;
-            Brick brick = _gamefield[xPoint, yPoint].GetBrick();
-            if (brick != null && brick.CollisionType == CollisionTypes.Block)
+            if (!stop)
             {
-                stop = true;
+                Brick brick = _gamefield[xPoint, yPoint].GetBrick();
+                if (brick != null)
+                {
+                    if (brick.CollisionType == CollisionTypes.Block)
+                    {
+                        stop = true;
+                    }
+                    if (brick.CollisionType == CollisionTypes.BlockBreakable)
+                    {
+                        stop = true;
+                        if (brick is BrickBreakAble)
+                        {
+                            ((BrickBreakAble) brick).DestroyBlock();
+                        }
+
+                    }
+                }
             }
             return stop;
         }
@@ -646,6 +668,6 @@ namespace Bomberbro.bomberman
     }
     public enum CollisionTypes
     {
-        Block, Empty, Bomb, PowerUp, Explosion
+        Block, BlockBreakable, Empty, Bomb,PowerUp, Explosion
     }
 }

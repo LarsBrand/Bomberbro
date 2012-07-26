@@ -75,6 +75,7 @@
     <Compile Include="bomberman\BombermanGame.cs" />
     <Compile Include="bomberman\GameField\Bomb\Bomb.cs" />
     <Compile Include="bomberman\GameField\Bomb\Explosion.cs" />
+    <Compile Include="bomberman\GameField\Bricks\BrickBreakAble.cs" />
     <Compile Include="bomberman\Helper\Animation.cs" />
     <Compile Include="bomberman\Player\bomberManInput.cs" />
     <Compile Include="bomberman\GameField\Bricks\Brick.cs" />
