@@ -58,7 +58,14 @@ namespace Bomberbro.bomberman
         public bool Dead
         {
             get { return _dead; }
-            set { _dead = value; }
+            set
+            {
+                if (!value)
+                {
+                    _deadAnimation.ResetAnimation();
+                }
+                _dead = value;
+            }
         }
 
         public void LoadContent(ContentManager content, GraphicsDeviceManager graphics)

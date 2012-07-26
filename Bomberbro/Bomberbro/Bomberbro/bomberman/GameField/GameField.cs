@@ -197,19 +197,6 @@ namespace Bomberbro.bomberman
             return theList;
         }
 
-        #region oldCode
-        //OldCode to dertmine what the row was
-        //public int GetRowHeight(float fieldHeigt, float currentHeight, int blockSize)
-        //{
-        //    int rowNumber = 0;
-        //    for (int i = 0; i * blockSize < currentHeight; i++)
-        //    {
-        //        rowNumber = i;
-        //    }
-        //    return rowNumber;
-        //}
-
-        #endregion
         public void LoadAllFieldContent(ContentManager content, GraphicsDeviceManager graphics)
         {
             //_backgroundTexture = new Texture2D(graphics.GraphicsDevice, 1, 1);
@@ -238,7 +225,7 @@ namespace Bomberbro.bomberman
             }
         }
 
-        public void updateField(GameTime gameTime)
+        public void updateField(GameTime gameTime,List<BomberManGuy> players )
         {
             for (int yPoint = 0; yPoint < yLenght; yPoint++)
             {
@@ -248,6 +235,15 @@ namespace Bomberbro.bomberman
                 }
             }
             //remove bombs
+            HandleBombs();
+            //handle explosions              
+            HandleExplosions();
+
+            CollisionChecker.CheckExplosionsOnPLayers(this,players);
+        }
+
+        private void HandleBombs()
+        {
             for (int yPoint = 0; yPoint < yLenght; yPoint++)
             {
                 for (int xPoint = 0; xPoint < xLenght; xPoint++)
@@ -256,14 +252,18 @@ namespace Bomberbro.bomberman
                     if (placedBomb != null)
                     {
                         if (placedBomb.Exploded)
-                        {//remove it
+                        {
+//remove it
                             _gamefield[xPoint, yPoint].Items.Remove(placedBomb);
                             CreateExplosion(placedBomb, xPoint, yPoint);
                         }
                     }
                 }
             }
-            //handle explosions              
+        }
+
+        private void HandleExplosions()
+        {
             for (int yPoint = 0; yPoint < yLenght; yPoint++)
             {
                 for (int xPoint = 0; xPoint < xLenght; xPoint++)
@@ -271,15 +271,16 @@ namespace Bomberbro.bomberman
                     List<Explosion> explosions = _gamefield[xPoint, yPoint].GetExplosions();
                     foreach (Explosion explosion in explosions)
                     {
-
                         if (explosions != null)
                         {
                             if (explosion.CanRemove)
-                            {//Explosion can be removed
+                            {
+//Explosion can be removed
                                 _gamefield[xPoint, yPoint].Items.Remove(explosion);
                             }
                             else
-                            {//set the correct explosion type
+                            {
+//set the correct explosion type
 
                                 bool up = false, down = false, left = false, right = false;
 
@@ -429,7 +430,7 @@ namespace Bomberbro.bomberman
 
         private void CreateExplosion(Bomb placedBomb, int xPoint, int yPoint)
         {
-            _gamefield[xPoint, yPoint].Items.Add(_explosionProtoType.Copy(ExplosionTypes.Cross));
+            _gamefield[xPoint, yPoint].Items.Add(_explosionProtoType.Copy(ExplosionTypes.Cross));            
             bool stopDown = false, stopUp = false, stopLeft = false, stopRight = false;
 
             for (int i = 1; i <= placedBomb.Power; i++)

@@ -11,9 +11,6 @@ namespace Bomberbro.bomberman
         public static Vector2 CheckPlayerMovement(GameField gameField, List<BomberManGuy> players, int playerID, MoveObject movement)
         {
             Vector2 newpoint = checkCollisionWithGameField(gameField, players[playerID], movement);
-
-            CheckCollisionWithBombs();
-            CheckCollisionWithPlayers();
             return newpoint;
         }
 
@@ -36,7 +33,7 @@ namespace Bomberbro.bomberman
                         case CollisionTypes.Bomb:
                             if (WasPlayerOnThisPointPreviously(gameField, gamefieldPos.X, gamefieldPos.Y, movement))
                             {
-                                newPosition = UnRestrictedWalk(newPosition,movement);
+                                newPosition = UnRestrictedWalk(newPosition, movement);
                             }
                             else
                             {
@@ -52,7 +49,7 @@ namespace Bomberbro.bomberman
 
                         case CollisionTypes.Empty:
                         default:
-                            newPosition = UnRestrictedWalk(movement.DestinationScreenPos,movement);
+                            newPosition = UnRestrictedWalk(movement.DestinationScreenPos, movement);
 
                             break;
                     }
@@ -119,14 +116,23 @@ namespace Bomberbro.bomberman
             return newPosition;
         }
 
-        private static void CheckCollisionWithPlayers()
-        {
-            //throw new NotImplementedException();
-        }
 
-        private static void CheckCollisionWithBombs()
+
+        public static void CheckExplosionsOnPLayers(GameField gameField, List<BomberManGuy> bomberManGuys)
         {
-            //throw new NotImplementedException();
+            foreach (BomberManGuy bomberManGuy in bomberManGuys)
+            {
+                Rectangle hitBox = bomberManGuy.GetBombermanGuyPositionedHitBox(gameField.FieldScale);
+                List<Vector2> hitBoxGameFieldPosition = gameField.getPosistionOfRectInGrid(hitBox);
+                foreach (Vector2 gameFieldPosition in hitBoxGameFieldPosition)
+                {//Is once of these vectors on an explosion, If so. DIE!!!
+                    if (gameField.Gamefield[(int)gameFieldPosition.X, (int)gameFieldPosition.Y].GetExplosions().Count > 0)
+                    {
+                        bomberManGuy.Dead = true;
+                    }
+                }
+            }
+
         }
 
     }

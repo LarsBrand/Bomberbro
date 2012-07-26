@@ -89,5 +89,10 @@ namespace Bomberbro
        {
            _animationFrames[_currentFrame].Render(rectangle);
        }
+
+       public void ResetAnimation()
+       {
+           _currentFrame = 0;
+       }
    }
 }

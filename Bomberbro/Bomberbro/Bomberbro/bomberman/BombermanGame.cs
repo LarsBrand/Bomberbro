@@ -130,7 +130,7 @@ namespace Bomberbro.bomberman
                 bomberManGuy.Update(gameTime);
                 bomberManGuy.BombermanGuyPositionedHitBoxPreviousUpdate = bomberManGuy.GetBombermanGuyPositionedHitBox(_gameField.FieldScale);
             }
-            _gameField.updateField(gameTime);
+            _gameField.updateField(gameTime,_players);
         }
 
         public void Draw(GameTime gameTime)
