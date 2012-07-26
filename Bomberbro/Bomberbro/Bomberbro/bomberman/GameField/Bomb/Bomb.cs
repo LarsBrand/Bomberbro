@@ -17,7 +17,7 @@ namespace Bomberbro.bomberman
         private int _timeToLive;
         private bool _exploded;
         private int _power;
-
+        private BomberManGuy _owner;
 
 
 
@@ -32,6 +32,12 @@ namespace Bomberbro.bomberman
         {
             get { return _power; }
             set { _power = value; }
+        }
+
+        public BomberManGuy Owner
+        {
+            get { return _owner; }
+            set { _owner = value; }
         }
 
 

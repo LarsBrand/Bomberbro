@@ -21,6 +21,8 @@ namespace Bomberbro.bomberman
         private Bomb bombProtoType;
         private Rectangle _bombermanGuyPositionedHitBoxPreviousUpdate;
         private bool _dead;
+        private int _amountOfAllowedBombs;
+        private List<Bomb> _placedBombs;
 
         private Animation _currentAnimation;
         private Animation _idleAnimation;
@@ -77,7 +79,7 @@ namespace Bomberbro.bomberman
 
             _playerTexture = content.Load<Texture2D>("character1_sprites");
             _player = new SpriteHelper(_playerTexture, _playerRectangle);
-
+            #region AnnimationInit
             Rectangle idleFrame1Rectangle = new Rectangle(6, 7, 63 - 6, 84 - 7);
             Rectangle idleFrame2Rectangle = new Rectangle(63, 7, 120 - 63, 84 - 7);
             List<SpriteHelper> idleAnimationFrames = new List<SpriteHelper>();
@@ -131,16 +133,19 @@ namespace Bomberbro.bomberman
             deadAnimationFrames.Add(new SpriteHelper(_playerTexture, deadFrame2Rectangle));
             deadAnimationFrames.Add(new SpriteHelper(_playerTexture, deadFrame3Rectangle));
             deadAnimationFrames.Add(new SpriteHelper(_playerTexture, deadFrame4Rectangle));
-            _deadAnimation = new Animation(190, deadAnimationFrames,true);
+            _deadAnimation = new Animation(190, deadAnimationFrames, true);
 
             Rectangle normalFrame1Rectangle = new Rectangle(6, 7, 63 - 6, 84 - 7);
             List<SpriteHelper> normalAnimationFrames = new List<SpriteHelper>();
             normalAnimationFrames.Add(new SpriteHelper(_playerTexture, normalFrame1Rectangle));
             _normalAnimation = new Animation(1000, normalAnimationFrames);
+            #endregion
 
 
             bombProtoType = new Bomb();
             bombProtoType.LoadContent(content);
+            _amountOfAllowedBombs = 2;
+            _placedBombs = new List<Bomb>();
             _currentAnimation = _normalAnimation;
         }
 
@@ -193,10 +198,22 @@ namespace Bomberbro.bomberman
         /// returns a bomb if it's possible and allowed, else returns null
         /// </summary>
         /// <returns>a bomb, or null of not allowed</returns>
-        public Bomb getBomb()
+        public Bomb GetBomb()
         {
-            Bomb outputBomb = bombProtoType.copy();
+            for (int i = _placedBombs.Count-1; i >=0 ; i--)
+            {
+                if (_placedBombs[i].Exploded)
+                {
+                    _placedBombs.RemoveAt(i);
+                }
+            }
+             if (_amountOfAllowedBombs > _placedBombs.Count)
+            {
+                Bomb outputBomb = bombProtoType.copy();
+                _placedBombs.Add(outputBomb);
             return outputBomb;
+            }
+            return null;
         }
 
         public void SetAnimation(playerAnimations animationType)

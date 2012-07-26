@@ -216,16 +216,19 @@ namespace Bomberbro.bomberman
 
         public void PlaceBomb(BomberManGuy bomberManGuy)
         {
-            Bomb newBomb = bomberManGuy.getBomb();
-            if (newBomb != null)
+            Vector2 bombpoint = GetPosistionInGrid(bomberManGuy.GetCenterOfPositionedHitBox(_fieldScale));
+            if (_gamefield[(int)bombpoint.X, (int)bombpoint.Y].GetBomb() == null) //Make sure there isn't a bomb already
             {
-                Vector2 bombpoint = GetPosistionInGrid(bomberManGuy.GetCenterOfPositionedHitBox(_fieldScale));
-                _gamefield[(int)bombpoint.X, (int)bombpoint.Y].Items.Add(newBomb);
+                Bomb newBomb = bomberManGuy.GetBomb();
+                if (newBomb != null)
+                {
+                    _gamefield[(int)bombpoint.X, (int)bombpoint.Y].Items.Add(newBomb);
+                }
 
             }
         }
 
-        public void updateField(GameTime gameTime,List<BomberManGuy> players )
+        public void updateField(GameTime gameTime, List<BomberManGuy> players)
         {
             for (int yPoint = 0; yPoint < yLenght; yPoint++)
             {
@@ -239,7 +242,7 @@ namespace Bomberbro.bomberman
             //handle explosions              
             HandleExplosions();
 
-            CollisionChecker.CheckExplosionsOnPLayers(this,players);
+            CollisionChecker.CheckExplosionsOnPLayers(this, players);
         }
 
         private void HandleBombs()
@@ -253,7 +256,7 @@ namespace Bomberbro.bomberman
                     {
                         if (placedBomb.Exploded)
                         {
-//remove it
+                            //remove it
                             _gamefield[xPoint, yPoint].Items.Remove(placedBomb);
                             CreateExplosion(placedBomb, xPoint, yPoint);
                         }
@@ -275,12 +278,12 @@ namespace Bomberbro.bomberman
                         {
                             if (explosion.CanRemove)
                             {
-//Explosion can be removed
+                                //Explosion can be removed
                                 _gamefield[xPoint, yPoint].Items.Remove(explosion);
                             }
                             else
                             {
-//set the correct explosion type
+                                //set the correct explosion type
 
                                 bool up = false, down = false, left = false, right = false;
 
@@ -430,7 +433,7 @@ namespace Bomberbro.bomberman
 
         private void CreateExplosion(Bomb placedBomb, int xPoint, int yPoint)
         {
-            _gamefield[xPoint, yPoint].Items.Add(_explosionProtoType.Copy(ExplosionTypes.Cross));            
+            _gamefield[xPoint, yPoint].Items.Add(_explosionProtoType.Copy(ExplosionTypes.Cross));
             bool stopDown = false, stopUp = false, stopLeft = false, stopRight = false;
 
             for (int i = 1; i <= placedBomb.Power; i++)
