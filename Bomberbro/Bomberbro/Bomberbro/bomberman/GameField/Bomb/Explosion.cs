@@ -76,8 +76,35 @@ namespace Bomberbro.bomberman
 
         public override void LoadContent(ContentManager content)
         {
+           // Texture2D explosionTexture = content.Load<Texture2D>("fire");
+           //Rectangle explosionCrossRectangle = new Rectangle(9, 9, 70 - 9, 70 - 9);
+           // _explosionCross = new SpriteHelper(explosionTexture, explosionCrossRectangle);
+
+           // Rectangle explosionRightRectangle = new Rectangle(70, 9, 131 - 70, 70 - 9);
+           // _explosionRight = new SpriteHelper(explosionTexture, explosionRightRectangle);
+           // Rectangle explosionRightEndRectangle = new Rectangle(131, 9, 192 - 131, 70 - 10);
+           // _explosionRightEnd = new SpriteHelper(explosionTexture, explosionRightEndRectangle);
+
+           // Texture2D explosionTextureLeft = SpriteHelper.Flip(explosionTexture, false, true);
+           // Rectangle explosionLeftRectangle = new Rectangle(explosionTextureLeft.Width - 131, 9, 131 - 70, 70 - 9);
+           // _explosionLeft = new SpriteHelper(explosionTextureLeft, explosionLeftRectangle);
+           // Rectangle explosionLeftEndRectangle = new Rectangle(explosionTextureLeft.Width - 192, 9, 192 - 131, 70 - 9);
+           // _explosionLeftEnd = new SpriteHelper(explosionTextureLeft, explosionLeftEndRectangle);
+
+           // Texture2D explosionTextureDown = SpriteHelper.RotateTexture90Degrees(explosionTexture);
+           // Rectangle explosionDownRectangle = new Rectangle(9, 70, 70 - 9, 131 - 70);
+           // _explosionDown = new SpriteHelper(explosionTextureDown, explosionDownRectangle);
+           // Rectangle explosionDownEndRectangle = new Rectangle(9, 131, 70 - 9, 192 - 131);
+           // _explosionDownEnd = new SpriteHelper(explosionTextureDown, explosionDownEndRectangle);
+
+           // Texture2D explosionTextureUp = SpriteHelper.Flip(explosionTextureDown, true, false);
+           // Rectangle explosionUpRectangle = new Rectangle(9, explosionTextureUp.Height - 131, 70 - 9, 131 - 70);
+           // _explosionUp = new SpriteHelper(explosionTextureUp, explosionUpRectangle);
+           // Rectangle explosionUpEndRectangle = new Rectangle(9, explosionTextureUp.Height - 192, 70 - 9, 192 - 131);
+           // _explosionUpEnd = new SpriteHelper(explosionTextureUp, explosionUpEndRectangle);
+
             Texture2D explosionTexture = content.Load<Texture2D>("fire");
-           Rectangle explosionCrossRectangle = new Rectangle(9, 9, 70 - 9, 70 - 9);
+            Rectangle explosionCrossRectangle = new Rectangle(9, 9, 70 - 9, 70 - 9);
             _explosionCross = new SpriteHelper(explosionTexture, explosionCrossRectangle);
 
             Rectangle explosionRightRectangle = new Rectangle(70, 9, 131 - 70, 70 - 9);

@@ -291,52 +291,108 @@ namespace Bomberbro.bomberman
                             down = true;
                         }
 
-                        if (up && down && left && right)
-                        {
-                            explosion.ExplosionType = ExplosionTypes.Cross;
-                        }
-                        else
-                        {
-                            if (up && !down)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.DownEnd;
-                            }
-                            else if (up)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.Down;
-                            }
-
-                            if (down && !up)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.UpEnd;
-                            }
-                            else if (down)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.Up;
-                            }
-                            if (left && !right)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.RightEnd;
-                            }
-                            else if (left)
-                            {
-                                explosion.ExplosionType = ExplosionTypes.Right;
-                            }
-                            if (right&&!left)
-                            {
-                                explosion.ExplosionType=ExplosionTypes.LeftEnd;
-                            }
-                            else if (right)
-                            {
-                                explosion.ExplosionType=ExplosionTypes.Left;
-                            }
-                            {
-                                
-                            }
-
-                        }
+                        GetCorrectExplosionStyle(xPoint, yPoint, right, left, up, down, explosion);
                     }
                 }
+            }
+        }
+
+        private void GetCorrectExplosionStyle(int xPoint, int yPoint, bool right, bool left, bool up, bool down, Explosion explosion)
+        {
+            if (up && down && left && right)
+            {
+                explosion.ExplosionType = ExplosionTypes.Cross;
+            }
+            else
+            {
+                if (up && !down)
+                {
+                    explosion.ExplosionType = ExplosionTypes.DownEnd;
+                }
+                else if (down && !up)
+                {
+                    explosion.ExplosionType = ExplosionTypes.UpEnd;
+                }
+                if (up && down)
+                {
+
+                    if (FindExplosionCross(true, xPoint, yPoint, explosion))
+                    {
+                        explosion.ExplosionType = ExplosionTypes.Up;
+                    }
+                    else
+                    {
+                        explosion.ExplosionType = ExplosionTypes.Down;
+                    }
+                }
+
+
+                if (left && !right)
+                {
+                    explosion.ExplosionType = ExplosionTypes.RightEnd;
+                }
+                else if (right && !left)
+                {
+                    explosion.ExplosionType = ExplosionTypes.LeftEnd;
+                }
+                if (left && right)
+                {
+                    if (FindExplosionCross(false, xPoint, yPoint, explosion))
+                    {
+                        explosion.ExplosionType = ExplosionTypes.Left;
+                    }
+                    else
+                    {
+                        explosion.ExplosionType = ExplosionTypes.Right;
+                    }
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Look for the explosioncross to set the correct explosion type
+        /// </summary>
+        /// <param name="UpDown">Search up down or left right</param>
+        /// <param name="xPoint"> </param>
+        /// <param name="yPoint"> </param>
+        /// <param name="explosion">the explosion</param>
+        /// <returns>true for cross is down or left, flase for cross is up or right </returns>
+        private bool FindExplosionCross(bool UpDown, int xPoint, int yPoint, Explosion explosion)
+        {
+            if (UpDown)
+            {
+                for (int i = yPoint; i > 0; i--)
+                {
+                    Explosion possibleCrossExplosion = _gamefield[xPoint, i].getExplosion();
+                    if (possibleCrossExplosion != null)
+                    {
+                        if (possibleCrossExplosion.ExplosionType == ExplosionTypes.Cross)
+                        {//we found the cross in above us,
+                            return false;
+                        }
+
+                    }
+                }
+                //we haven't returned for values above us, the cross must be downwards.
+                return true;
+            }
+            else
+            {
+                for (int i = xPoint; i > 0; i--)
+                {
+                    Explosion possibleCrossExplosion = _gamefield[i,yPoint].getExplosion();
+                    if (possibleCrossExplosion != null)
+                    {
+                        if (possibleCrossExplosion.ExplosionType == ExplosionTypes.Cross)
+                        {//we found the cross on the right from us,
+                            return false;
+                        }
+
+                    }
+                }
+                //we haven't returned for values right us, the cross must be on our left.
+                return true;
             }
         }
 
