@@ -375,8 +375,7 @@ namespace Bomberbro.bomberman
             }
             if (unset)
             {
-                int i = 0;
-                i++;
+                throw new Exception("OhNO strange behavior");
             }
         }
 
@@ -439,65 +438,89 @@ namespace Bomberbro.bomberman
             for (int i = 1; i <= placedBomb.Power; i++)
             {
 
-                if (xPoint - i < 0)
-                {
-                    stopLeft = true;
-                }
-                else
-                {
-                    Brick brick = _gamefield[xPoint - i, yPoint].GetBrick();
-                    if (brick != null && brick.CollisionType == CollisionTypes.Block)
-                    {
-                        stopLeft = true;
-                    }
-                }
-                if (yPoint - i < 0)
-                {
-                    stopUp = true;
-                }
-                else
-                {
-                    Brick brick = _gamefield[xPoint, yPoint - i].GetBrick();
-                    if (brick != null && brick.CollisionType == CollisionTypes.Block)
-                    {
-                        stopUp = true;
-                    }
-                }
-                if (xPoint + i > _gamefield.GetLength(0) - 1)
-                {
-                    stopRight = true;
-                }
-                else
-                {
-                    Brick brick = _gamefield[xPoint + i, yPoint].GetBrick();
-                    if (brick != null && brick.CollisionType == CollisionTypes.Block)
-                    {
-                        stopRight = true;
-                    }
-                }
-                if (yPoint + i > _gamefield.GetLength(1) - 1)
-                {
-                    stopDown = true;
-                }
-                else
-                {
-                    Brick brick = _gamefield[xPoint, yPoint + i].GetBrick();
-                    if (brick != null && brick.CollisionType == CollisionTypes.Block)
-                    {
-                        stopDown = true;
-                    }
-                }
+                SetStopsForExplosion(xPoint, yPoint, i, ref stopLeft, ref stopDown, ref stopUp, ref stopRight);
 
                 if (!stopRight)
+                {
                     _gamefield[xPoint + i, yPoint].Items.Add(_explosionProtoType.Copy());
+                    ExplodeBombHere(xPoint + i, yPoint);
+                }
+
                 if (!stopLeft)
+                {
                     _gamefield[xPoint - i, yPoint].Items.Add(_explosionProtoType.Copy());
+                    ExplodeBombHere(xPoint - i, yPoint);
+
+                }
                 if (!stopDown)
+                {
                     _gamefield[xPoint, yPoint + i].Items.Add(_explosionProtoType.Copy());
+                    ExplodeBombHere(xPoint, yPoint + i);
+                }
                 if (!stopUp)
+                {
                     _gamefield[xPoint, yPoint - i].Items.Add(_explosionProtoType.Copy());
+                    ExplodeBombHere(xPoint, yPoint - i);
+                }
             }
 
+        }
+
+        private void ExplodeBombHere(int xPoint, int yPoint)
+        {            
+            Bomb explodeThis = _gamefield[xPoint, yPoint].GetBomb();
+            if (explodeThis != null)
+            {
+                explodeThis.Explode();
+            }
+        }
+
+        private void SetStopsForExplosion(int xPoint, int yPoint, int i, ref bool stopLeft, ref bool stopDown, ref bool stopUp, ref bool stopRight)
+        {
+            if (xPoint - i < 0)
+            {
+                stopLeft = true;
+            }
+            else
+            {
+                //We're using this notation to keep the value of original boolean, in case our method returns false
+                stopLeft = StopExplosionOnBrick(xPoint - i, yPoint) || stopLeft;
+            }
+            if (yPoint - i < 0)
+            {
+                stopUp = true;
+            }
+            else
+            {
+                stopUp = StopExplosionOnBrick(xPoint, yPoint - i) || stopUp;
+            }
+            if (xPoint + i > _gamefield.GetLength(0) - 1)
+            {
+                stopRight = true;
+            }
+            else
+            {
+                stopRight = StopExplosionOnBrick(xPoint + i, yPoint) || stopRight;
+            }
+            if (yPoint + i > _gamefield.GetLength(1) - 1)
+            {
+                stopDown = true;
+            }
+            else
+            {
+                stopDown = StopExplosionOnBrick(xPoint, yPoint + i) || stopDown;
+            }
+        }
+
+        private bool StopExplosionOnBrick(int xPoint, int yPoint)
+        {
+            bool stop = false;
+            Brick brick = _gamefield[xPoint, yPoint].GetBrick();
+            if (brick != null && brick.CollisionType == CollisionTypes.Block)
+            {
+                stop = true;
+            }
+            return stop;
         }
 
         public bool wasPlayerOnThisPointPreviously(GameField gameField, float xPos, float yPos, MoveObject moveObject)

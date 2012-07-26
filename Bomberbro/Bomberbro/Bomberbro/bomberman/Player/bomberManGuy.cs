@@ -144,7 +144,7 @@ namespace Bomberbro.bomberman
 
             bombProtoType = new Bomb();
             bombProtoType.LoadContent(content);
-            _amountOfAllowedBombs = 2;
+            _amountOfAllowedBombs = 3;
             _placedBombs = new List<Bomb>();
             _currentAnimation = _normalAnimation;
         }
