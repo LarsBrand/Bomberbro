@@ -21,41 +21,64 @@ namespace Bomberbro.Tests
         private GraphicsDeviceManager _graphics;
         private int _width, _height;
         SpriteBatch _spriteBatch;
-        AudioEngine _audioEngine;
-        WaveBank _waveBankTheme;
-        SoundBank _soundBankTheme;
+       
+      //  static AudioEngine _audioEngine;
+      //  static WaveBank _waveBankTheme;
+      // static SoundBank _soundBankTheme;
 
-        WaveBank _waveBankSoundEffect;
-        SoundBank _soundBankSoundEffect;
+      //  WaveBank _waveBankSoundEffect;
+      //  SoundBank _soundBankSoundEffect;
 
-        Cue _currentSong;
-        private Cue _explosion2;
-        private Cue _cancel1;
-        private Cue _cancel2;
-        private Cue _collision1;
-        private Cue _collision2;
-        private Cue _completeDead;
-        private Cue _explosion1;
-        private Cue _hit;
-        private Cue _marioCoin;
-        private Cue _randomMelody1;
-        private Cue _randomMelody2;
-        private Cue _sfx1;
-        private Cue _thumbMove1;
-        private Cue _random;
+      //private  static Cue _currentSong;
+      //  private Cue _explosion2;
+      //  private Cue _cancel1;
+      //  private Cue _cancel2;
+      //  private Cue _collision1;
+      //  private Cue _collision2;
+      //  private Cue _completeDead;
+      //  private Cue _explosion1;
+      //  private Cue _hit;
+      //  private Cue _marioCoin;
+      //  private Cue _randomMelody1;
+      //  private Cue _randomMelody2;
+      //  private Cue _sfx1;
+      //  private Cue _thumbMove1;
+      //  private Cue _random;
 
         SpriteFont _font;
 
         KeyboardState _current, _previous;
 
-
+        
         string _info;
-        private float _musicVolume;
-        private float _pitch;
+        //private float _musicVolume;
+        //private static float _musicPitch;
+
+        ///// <summary>
+        ///// Default =  0.5f;
+        ///// </summary>
+        //public static float MusicPitch
+        //{
+        //    get { return _musicPitch / 100; }
+        //    set
+        //    {
+        //        _musicPitch = value * 100;
+        //        if (_musicPitch < 0)
+        //        {
+        //            _musicPitch = 0;
+        //        }
+        //        if (_musicPitch > 100)
+        //        {
+        //            _musicPitch = 100;
+        //        }
+        //        _currentSong.SetVariable("Pitch", _musicPitch);
+        //    }
+        //}
         public SoundTest(ContentManager content, GraphicsDeviceManager graphics)
         {
             _content = content;
             _graphics = graphics;
+
         }
         public void Initialize()
         {
@@ -73,33 +96,35 @@ namespace Bomberbro.Tests
             Texture2D logo = _content.Load<Texture2D>("logo");
             _logoHelper = new SpriteHelper(logo, _logoRect);
 
-            _audioEngine = new AudioEngine(_content.RootDirectory + "//BomberbroAudio.xgs");
-            _waveBankTheme = new WaveBank(_audioEngine, _content.RootDirectory + "//Theme.xwb");
-            _soundBankTheme = new SoundBank(_audioEngine, _content.RootDirectory + "//Theme.xsb");
+            //_audioEngine = new AudioEngine(_content.RootDirectory + "//BomberbroAudio.xgs");
+            //_waveBankTheme = new WaveBank(_audioEngine, _content.RootDirectory + "//Theme.xwb");
+            //_soundBankTheme = new SoundBank(_audioEngine, _content.RootDirectory + "//Theme.xsb");
 
-            _waveBankSoundEffect = new WaveBank(_audioEngine, _content.RootDirectory + "//SoundEffects.xwb");
-            _soundBankSoundEffect = new SoundBank(_audioEngine, _content.RootDirectory + "//SoundEffect.xsb");
+            //_waveBankSoundEffect = new WaveBank(_audioEngine, _content.RootDirectory + "//SoundEffects.xwb");
+            //_soundBankSoundEffect = new SoundBank(_audioEngine, _content.RootDirectory + "//SoundEffect.xsb");
 
-            _currentSong = _soundBankTheme.GetCue("Theme");
-            _explosion2 = _soundBankSoundEffect.GetCue("Explosion 2");
-            _cancel1 = _soundBankSoundEffect.GetCue("Cancel 1");
-            _cancel2 = _soundBankSoundEffect.GetCue("Cancel 2");
-            _collision1 = _soundBankSoundEffect.GetCue("Collision 1");
-            _collision2 = _soundBankSoundEffect.GetCue("Collision 2");
-            _completeDead = _soundBankSoundEffect.GetCue("Complete-Dead");
-            _explosion1 = _soundBankSoundEffect.GetCue("Explosion 1");
-            _hit = _soundBankSoundEffect.GetCue("Hit");
-            _marioCoin = _soundBankSoundEffect.GetCue("Mario Coin");
-            _randomMelody1 = _soundBankSoundEffect.GetCue("Random Melody 1");
-            _randomMelody2 = _soundBankSoundEffect.GetCue("Random Melody 2");
-            _sfx1 = _soundBankSoundEffect.GetCue("SFX1");
-            _thumbMove1 = _soundBankSoundEffect.GetCue("ThumbMove 1");
-            _random = _soundBankSoundEffect.GetCue("Random");
+            //_currentSong = _soundBankTheme.GetCue("Theme");
+            //_explosion2 = _soundBankSoundEffect.GetCue("Explosion 2");
+            //_cancel1 = _soundBankSoundEffect.GetCue("Cancel 1");
+            //_cancel2 = _soundBankSoundEffect.GetCue("Cancel 2");
+            //_collision1 = _soundBankSoundEffect.GetCue("Collision 1");
+            //_collision2 = _soundBankSoundEffect.GetCue("Collision 2");
+            //_completeDead = _soundBankSoundEffect.GetCue("Complete-Dead");
+            //_explosion1 = _soundBankSoundEffect.GetCue("Explosion 1");
+            //_hit = _soundBankSoundEffect.GetCue("Hit");
+            //_marioCoin = _soundBankSoundEffect.GetCue("Mario Coin");
+            //_randomMelody1 = _soundBankSoundEffect.GetCue("Random Melody 1");
+            //_randomMelody2 = _soundBankSoundEffect.GetCue("Random Melody 2");
+            //_sfx1 = _soundBankSoundEffect.GetCue("SFX1");
+            //_thumbMove1 = _soundBankSoundEffect.GetCue("ThumbMove 1");
+            //_random = _soundBankSoundEffect.GetCue("Random");
 
-            _currentSong.Play();
-            _musicVolume = 1.0f;
-            _pitch = 50.0f;
-
+            //_currentSong.Play();
+            //_musicVolume = 1.0f;
+            //_musicPitch = 50.0f;
+            
+            BombermanSound.LoadSounds(_content);
+            BombermanSound.PlayTheme();
 
             _font = _content.Load<SpriteFont>("TestFont");
         }
@@ -116,137 +141,99 @@ namespace Bomberbro.Tests
 
             if (_current.IsKeyDown(Keys.Up) && _previous.IsKeyDown(Keys.Up))
             {
-                _musicVolume += 0.01f;
-                if (_musicVolume > 1.0f)
-                {
-                    _musicVolume = 1.0f;
-                }
-                _audioEngine.GetCategory("Music").SetVolume(_musicVolume);
+                BombermanSound.MusicVolume += 0.01f;
             }
 
             if (_current.IsKeyDown(Keys.Down) && _previous.IsKeyDown(Keys.Down))
             {
-                _musicVolume -= 0.01f;
-                if (_musicVolume < 0)
-                {
-                    _musicVolume = 0;
-                }
-                _audioEngine.GetCategory("Music").SetVolume(_musicVolume);
+                BombermanSound.MusicVolume -= 0.01f;
             }
             if (_current.IsKeyDown(Keys.Left) && _previous.IsKeyDown(Keys.Left))
             {
-                _pitch -= 1f;
-                if (_pitch < 0)
-                {
-                    _pitch = 0;
-                }
-                _currentSong.SetVariable("Pitch", _pitch);
+
+                BombermanSound.MusicPitch -= 0.01f;
             }
             if (_current.IsKeyDown(Keys.Right) && _previous.IsKeyDown(Keys.Right))
             {
-                _pitch += 1f;
-                if (_pitch > 100)
-                {
-                    _pitch = 100;
-                }
-                _currentSong.SetVariable("Pitch", _pitch);
+                BombermanSound.MusicPitch += 0.01f;
             }
 
             if (_current.IsKeyDown(Keys.Q)
             && !_previous.IsKeyDown(Keys.Q))
             {
-                _explosion1.Play();
-                _explosion1 = _soundBankSoundEffect.GetCue("Explosion 1");
+               BombermanSound.PlayExplosionShort();
             }
 
             if (_current.IsKeyDown(Keys.W)
             && !_previous.IsKeyDown(Keys.W))
             {
-                _explosion2.Play();
-                _explosion2 = _soundBankSoundEffect.GetCue("Explosion 2");
-            }
+                BombermanSound.PlayExplosionLong();}
 
             if (_current.IsKeyDown(Keys.D)
             && !_previous.IsKeyDown(Keys.D))
             {
-                _cancel1.Play();
-                _cancel1 = _soundBankSoundEffect.GetCue("Cancel 1");
+                BombermanSound.PlayCancelBleep();
+
             }
 
             if (_current.IsKeyDown(Keys.F)
             && !_previous.IsKeyDown(Keys.F))
             {
-                _cancel2.Play();
-                _cancel2 = _soundBankSoundEffect.GetCue("Cancel 2");
+                BombermanSound.PlayCancelBonk();
             }
             if (_current.IsKeyDown(Keys.T)
             && !_previous.IsKeyDown(Keys.T))
             {
-                _collision1.Play();
-                _collision1 = _soundBankSoundEffect.GetCue("Collision 1");
+                BombermanSound.PlayCollisionTick();
             }
             if (_current.IsKeyDown(Keys.Y)
             && !_previous.IsKeyDown(Keys.Y))
             {
-                _collision2.Play();
-                _collision2 = _soundBankSoundEffect.GetCue("Collision 2");
+                BombermanSound.PlayCollisionBump();
             }
             if (_current.IsKeyDown(Keys.U)
             && !_previous.IsKeyDown(Keys.U))
             {
-                _completeDead.Play();
-                _completeDead = _soundBankSoundEffect.GetCue("Complete-Dead");
+                BombermanSound.PlayDeathSound();
             }
 
             if (_current.IsKeyDown(Keys.I)
             && !_previous.IsKeyDown(Keys.I))
             {
-                _hit.Play();
-                _hit = _soundBankSoundEffect.GetCue("Hit");
+                BombermanSound.PlayHit();
             }
             if (_current.IsKeyDown(Keys.O)
             && !_previous.IsKeyDown(Keys.O))
             {
-                _marioCoin.Play();
-                _marioCoin = _soundBankSoundEffect.GetCue("Mario Coin");
+                BombermanSound.PlayMarioCoinSonicRingItsAllTheSame();
             }
 
             if (_current.IsKeyDown(Keys.P)
             && !_previous.IsKeyDown(Keys.P))
             {
-                _randomMelody1.Play();
-                _randomMelody1 = _soundBankSoundEffect.GetCue("Random Melody 1");
+                BombermanSound.PlayMelodySlow();
             }
             if (_current.IsKeyDown(Keys.A)
             && !_previous.IsKeyDown(Keys.A))
             {
-                _randomMelody2.Play();
-                _randomMelody2 = _soundBankSoundEffect.GetCue("Random Melody 2");
+                BombermanSound.PlayMelodyFast();
             }
             if (_current.IsKeyDown(Keys.S)
             && !_previous.IsKeyDown(Keys.S))
             {
-                _sfx1.Play();
-                _sfx1 = _soundBankSoundEffect.GetCue("SFX1");
+                BombermanSound.PlayPleep();
             }
             if (_current.IsKeyDown(Keys.E)
             && !_previous.IsKeyDown(Keys.E))
             {
-                _thumbMove1.Play();
-                _thumbMove1 = _soundBankSoundEffect.GetCue("ThumbMove 1");
+                BombermanSound.PlayDomp();
             }
-            if (_current.IsKeyDown(Keys.R)
-            && !_previous.IsKeyDown(Keys.R))
-            {
-                _random.Play();
-                _random = _soundBankSoundEffect.GetCue("Random");
-            }
+          
             StringBuilder builder = new StringBuilder();            
-            builder.AppendLine("The current song playing is " + _currentSong.Name);
             builder.AppendLine("Press the Up/Down key to modify the volume");
             builder.AppendLine("Press the Right/Left key to modify the pitch");
-            builder.AppendLine("Music Volume is set at " + _musicVolume * 100 + "%");
-            builder.AppendLine("Music Volume is set at " + _pitch * 2 + "%");
+            builder.AppendLine("Music Volume is set at " + BombermanSound.MusicVolume * 100 + "%");
+            builder.AppendLine("Music Volume is set at " + BombermanSound.MusicPitch * 200 + "%");
             builder.AppendLine("");
             builder.AppendLine("Q - Explosion 1");
             builder.AppendLine("W - Explosion 2");
@@ -261,7 +248,6 @@ namespace Bomberbro.Tests
             builder.AppendLine("S - SFX 1");
             builder.AppendLine("D - Cancel 1");
             builder.AppendLine("F - Cancel 2");
-            builder.AppendLine("R - Pick a random sound from the song que");
             _info = builder.ToString();
         }
 

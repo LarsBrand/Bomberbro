@@ -22,7 +22,7 @@ namespace Bomberbro.bomberman
 
         private static Rectangle _backgroundRectangle = new Rectangle(0, 0, 840, 690);
         private static Rectangle _backgroundFancifyBarRectangle = new Rectangle(0,660,840,690-660);
-
+        private int _totalPlayTime;
 
 
         private Texture2D _backgroundTexture;
@@ -54,8 +54,9 @@ namespace Bomberbro.bomberman
             _fieldSize = new Vector2(fieldWidth, fieldHeight);
             _totalSize = new Vector2(_width, _height);
             _fieldPosition = new Vector2(-30, 60);
+            _totalPlayTime = 1;
 
-            buildGameField();
+            BuildGameField();
 
             _players = new List<BomberManGuy>();
             _players.Add(new BomberManGuy());
@@ -65,9 +66,11 @@ namespace Bomberbro.bomberman
             _players[0].Position = new Vector2((_fieldPosition.X + _gameField.BlockWidth) + 1, (_fieldPosition.Y + _gameField.BlockHeight) + 1);
 
             _bomberManInput = new BomberManInput(_players, _gameField);
+            
+
         }
 
-        private void buildGameField()
+        private void BuildGameField()
         {
             int sizeX = 15;
             int sizeY = 11;
@@ -116,7 +119,8 @@ namespace Bomberbro.bomberman
             _background = new SpriteHelper(_backgroundTexture, _backgroundRectangle);
             _backgroundFacifyBar = new SpriteHelper(_backgroundTexture, _backgroundFancifyBarRectangle);
             
-
+           BombermanSound.LoadSounds(_content);
+           BombermanSound.PlayTheme();
             foreach (var bomberManGuy in _players)
             {
                 bomberManGuy.LoadContent(_content, _graphics);
@@ -133,7 +137,7 @@ namespace Bomberbro.bomberman
         public void Update(GameTime gameTime)
         {
             Input.Update();
-
+            _totalPlayTime += gameTime.ElapsedGameTime.Milliseconds;
             _bomberManInput.Update(gameTime);
             foreach (var bomberManGuy in _players)
             {
@@ -141,6 +145,7 @@ namespace Bomberbro.bomberman
                 bomberManGuy.BombermanGuyPositionedHitBoxPreviousUpdate = bomberManGuy.GetBombermanGuyPositionedHitBox(_gameField.FieldScale);
             }
             _gameField.updateField(gameTime, _players);
+            
         }
 
         public void Draw(GameTime gameTime)

@@ -66,6 +66,11 @@ namespace Bomberbro.bomberman
                 {
                     _deadAnimation.ResetAnimation();
                 }
+                else
+                {
+                    if (!Dead)
+                        BombermanSound.PlayMelodySlow();
+                }
                 _dead = value;
             }
         }
@@ -200,18 +205,19 @@ namespace Bomberbro.bomberman
         /// <returns>a bomb, or null of not allowed</returns>
         public Bomb GetBomb()
         {
-            for (int i = _placedBombs.Count-1; i >=0 ; i--)
+            for (int i = _placedBombs.Count - 1; i >= 0; i--)
             {
                 if (_placedBombs[i].Exploded)
                 {
                     _placedBombs.RemoveAt(i);
                 }
             }
-             if (_amountOfAllowedBombs > _placedBombs.Count)
+            if (_amountOfAllowedBombs > _placedBombs.Count)
             {
                 Bomb outputBomb = bombProtoType.copy();
                 _placedBombs.Add(outputBomb);
-            return outputBomb;
+                BombermanSound.PlayDomp();
+                return outputBomb;
             }
             return null;
         }

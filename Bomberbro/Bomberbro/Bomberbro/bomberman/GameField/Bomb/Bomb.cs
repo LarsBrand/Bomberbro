@@ -105,6 +105,8 @@ namespace Bomberbro.bomberman
         public void Explode()
         {
             _exploded = true;
+            BombermanSound.PlayExplosionLong();
+            
         }
     }
 }

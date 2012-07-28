@@ -30,10 +30,10 @@ namespace Bomberbro
             _graphics = new GraphicsDeviceManager(this);
             //_graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
-            //_game = new BombermanGame(Content, _graphics);
             //_game= new FontTest(Content,_graphics);
             // _game= new SpriteTurningTest(Content,_graphics);
-            _game = new SoundTest(Content, _graphics);
+            //_game = new SoundTest(Content, _graphics);
+            _game = new BombermanGame(Content, _graphics);
         }
 
         /// <summary>

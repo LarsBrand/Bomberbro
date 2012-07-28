@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="bomberman\BombermanGame.cs" />
+    <Compile Include="bomberman\Helper\BombermanSound.cs" />
     <Compile Include="bomberman\GameField\Bomb\Bomb.cs" />
     <Compile Include="bomberman\GameField\Bomb\Explosion.cs" />
     <Compile Include="bomberman\GameField\Bricks\BrickBreakAble.cs" />
