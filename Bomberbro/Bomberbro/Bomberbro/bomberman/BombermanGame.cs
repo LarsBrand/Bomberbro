@@ -21,7 +21,7 @@ namespace Bomberbro.bomberman
         private int _width, _height;
 
         private static Rectangle _backgroundRectangle = new Rectangle(0, 0, 840, 690);
-        private static Rectangle _backgroundFancifyBarRectangle = new Rectangle(0,660,840,690-660);
+        private static Rectangle _backgroundFancifyBarRectangle = new Rectangle(0, 660, 840, 690 - 660);
         private int _totalPlayTime;
 
 
@@ -59,14 +59,18 @@ namespace Bomberbro.bomberman
             BuildGameField();
 
             _players = new List<BomberManGuy>();
-            _players.Add(new BomberManGuy());
+            _players.Add(new BomberManGuy(PlayerColor.White));
             _players[0].PlayerHitBoxHeight = Convert.ToInt32(_gameField.BlockHeight * 0.8f);
             _players[0].PlayerHitBoxWidth = Convert.ToInt32(_gameField.BlockWidth * 0.8f);
-
             _players[0].Position = new Vector2((_fieldPosition.X + _gameField.BlockWidth) + 1, (_fieldPosition.Y + _gameField.BlockHeight) + 1);
 
+            _players.Add(new BomberManGuy(PlayerColor.Black));
+            _players[1].PlayerHitBoxHeight = Convert.ToInt32(_gameField.BlockHeight * 0.8f);
+            _players[1].PlayerHitBoxWidth = Convert.ToInt32(_gameField.BlockWidth * 0.8f);
+            _players[1].Position = new Vector2((_fieldPosition.X + (_gameField.BlockWidth * (_gameField.XLenght - 2)) + 1), (_fieldPosition.Y + (_gameField.BlockHeight * (_gameField.YLenght - 2))) -15);
+
             _bomberManInput = new BomberManInput(_players, _gameField);
-            
+
 
         }
 
@@ -118,9 +122,9 @@ namespace Bomberbro.bomberman
             _backgroundTexture = _content.Load<Texture2D>("layout_level_empty");
             _background = new SpriteHelper(_backgroundTexture, _backgroundRectangle);
             _backgroundFacifyBar = new SpriteHelper(_backgroundTexture, _backgroundFancifyBarRectangle);
-            
-           BombermanSound.LoadSounds(_content);
-           BombermanSound.PlayTheme();
+
+            BombermanSound.LoadSounds(_content);
+            BombermanSound.PlayTheme();
             foreach (var bomberManGuy in _players)
             {
                 bomberManGuy.LoadContent(_content, _graphics);
@@ -145,7 +149,7 @@ namespace Bomberbro.bomberman
                 bomberManGuy.BombermanGuyPositionedHitBoxPreviousUpdate = bomberManGuy.GetBombermanGuyPositionedHitBox(_gameField.FieldScale);
             }
             _gameField.updateField(gameTime, _players);
-            
+
         }
 
         public void Draw(GameTime gameTime)
@@ -161,7 +165,7 @@ namespace Bomberbro.bomberman
             //}
             SpriteHelper.DrawSprites(_width, _height);
             _backgroundFacifyBar.Render(_backgroundFancifyBarRectangle);
-            SpriteHelper.DrawSprites(_width,_height);
+            SpriteHelper.DrawSprites(_width, _height);
 
         }
     }

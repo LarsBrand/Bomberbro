@@ -450,6 +450,15 @@ namespace Bomberbro.Helpers
 				} // foreach if (WasKeyPressedLastFrame)
 		} // HandleKeyboardInput(inputText)
 
+        /// <summary>
+        /// Keyboard key pressed
+        /// </summary>
+        /// <returns>Bool</returns>
+        public static bool KeyboardKeyPressed(Keys key)
+        {
+            return keyboardState.IsKeyDown(key);
+        } // KeyboardSpacePressed
+
 		/// <summary>
 		/// Keyboard key just pressed
 		/// </summary>

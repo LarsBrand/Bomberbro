@@ -87,12 +87,17 @@ namespace Bomberbro
 
        public void Draw(Rectangle rectangle)
        {
-           _animationFrames[_currentFrame].Render(rectangle);
+           Draw(rectangle,Color.White);
        }
 
        public void ResetAnimation()
        {
            _currentFrame = 0;
+       }
+
+       public void Draw(Rectangle rectangle, Color DrawColor)
+       {
+           _animationFrames[_currentFrame].Render(rectangle,DrawColor);
        }
    }
 }

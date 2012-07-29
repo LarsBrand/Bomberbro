@@ -11,8 +11,7 @@ namespace Bomberbro.bomberman
 {
     public class BomberManGuy
     {
-
-        Rectangle _playerRectangle = new Rectangle(6, 7, 63 - 6, 84 - 7);
+        private Rectangle _playerRectangle = new Rectangle(6, 7, 63 - 6, 84 - 7);
         private Texture2D _playerTexture;
         private SpriteHelper _player;
         private Vector2 _position;
@@ -33,6 +32,13 @@ namespace Bomberbro.bomberman
         private Animation _deadAnimation;
         private Animation _normalAnimation;
 
+        private PlayerColor _playerColor;
+        private Color _playerDrawColor;
+
+        public BomberManGuy(PlayerColor color)
+        {
+            _playerColor = color;
+        }
         public Vector2 Position
         {
             get { return _position; }
@@ -81,10 +87,15 @@ namespace Bomberbro.bomberman
             _hitBoxTexture = new Texture2D(graphics.GraphicsDevice, 1, 1);
             _hitBoxTexture.SetData(new Color[] { Color.Red });
             _hitBox = new SpriteHelper(_hitBoxTexture, new Rectangle(0, 0, 1, 1));
+            _playerDrawColor =GetPlayerDrawColor(_playerColor);
 
-            _playerTexture = content.Load<Texture2D>("character1_sprites");
+            Texture2D originalTexture = content.Load<Texture2D>("character1_sprites");
+            _playerTexture = originalTexture;
+
             _player = new SpriteHelper(_playerTexture, _playerRectangle);
+
             #region AnnimationInit
+
             Rectangle idleFrame1Rectangle = new Rectangle(6, 7, 63 - 6, 84 - 7);
             Rectangle idleFrame2Rectangle = new Rectangle(63, 7, 120 - 63, 84 - 7);
             List<SpriteHelper> idleAnimationFrames = new List<SpriteHelper>();
@@ -144,6 +155,7 @@ namespace Bomberbro.bomberman
             List<SpriteHelper> normalAnimationFrames = new List<SpriteHelper>();
             normalAnimationFrames.Add(new SpriteHelper(_playerTexture, normalFrame1Rectangle));
             _normalAnimation = new Animation(1000, normalAnimationFrames);
+
             #endregion
 
 
@@ -152,6 +164,30 @@ namespace Bomberbro.bomberman
             _amountOfAllowedBombs = 3;
             _placedBombs = new List<Bomb>();
             _currentAnimation = _normalAnimation;
+        }
+
+        private Color GetPlayerDrawColor(PlayerColor playerColor)
+        {
+            switch (playerColor)
+            {
+                case PlayerColor.White:
+                    return Color.White;
+                    break;
+                case PlayerColor.Red:
+                    return Color.OrangeRed;
+                    break;
+                case PlayerColor.Green:
+                    return Color.DarkGreen;
+                    break;
+                case PlayerColor.Blue:
+                    return Color.Blue;
+                    break;
+                case PlayerColor.Black:
+                    return Color.DarkGray;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("playerColor");
+            }
         }
 
         public void Draw()
@@ -164,14 +200,15 @@ namespace Bomberbro.bomberman
         {
             //_player.Render(new Rectangle(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y), Convert.ToInt32(_playerRectangle.Width * scale), Convert.ToInt32(_playerRectangle.Height * scale)));
 
-            _currentAnimation.Draw(new Rectangle(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y), Convert.ToInt32(_playerRectangle.Width * scale), Convert.ToInt32(_playerRectangle.Height * scale)));
+            _currentAnimation.Draw(new Rectangle(Convert.ToInt32(Position.X), Convert.ToInt32(Position.Y), Convert.ToInt32(_playerRectangle.Width * scale), Convert.ToInt32(_playerRectangle.Height * scale)),_playerDrawColor);
             //drawHitBox(scale);
 
         }
 
         private Texture2D _hitBoxTexture;
         private SpriteHelper _hitBox;
-        void drawHitBox(float scale)
+
+        private void drawHitBox(float scale)
         {
             SpriteHelper.DrawSprites(840, 690);
             Rectangle bgrec = GetBombermanGuyPositionedHitBox(scale);
@@ -252,6 +289,85 @@ namespace Bomberbro.bomberman
             }
 
         }
+
+        //private Texture2D SetColorForPlayer(Texture2D texture, PlayerColor playerColor)
+        //{
+        //    Texture2D outputTexture = new Texture2D(texture.GraphicsDevice, texture.Width, texture.Height);
+        //    Color whiteHat = new Color(255, 255, 255);
+        //    Color whiteHatShade = new Color(204, 204, 204);
+        //    Color whiteHatShade2 = new Color(202, 202, 202);
+        //    Color whiteHatShade3 = new Color(247, 247, 247);
+        //    Color whiteHatShade4 = new Color(250, 250, 250);
+
+        //    Color coloredHatShade;
+        //    Color coloredHatShade2;
+        //    Color coloredHatShade3;
+        //    Color coloredHatShade4;
+        //    Color coloredHat;
+        //    SetColorValues(playerColor, out coloredHat,out coloredHatShade, out coloredHatShade2,out coloredHatShade3,out coloredHatShade4);
+
+
+        //    Color[] data = new Color[texture.Width * texture.Height];
+        //    texture.GetData(data);
+
+        //    // You now have a packed array of Colors. 
+        //    // So, change the 3rd pixel from the right which is the 4th pixel from the top do:
+
+        //    for (int i = 0; i < data.Length; i++)
+        //    {
+        //        if (data[i] == whiteHat)
+        //            data[i] = coloredHat;
+        //        if (data[i] == whiteHatShade)
+        //            data[i] = coloredHatShade;
+        //        if (data[i] == whiteHatShade2)
+        //            data[i] = coloredHatShade2;
+        //        if (data[i] == whiteHatShade3)
+        //            data[i] = coloredHatShade3;
+        //    }
+        //    outputTexture.SetData(data);            
+        //    return outputTexture;
+        //}
+
+        //I'm not going to do it like this. i'm not asain FFS; changing every pixel.
+        //private void SetColorValues(PlayerColor playerColor, out Color coloredHat, out Color coloredHatShade, out Color coloredHatShade2, out Color coloredHatShade3, out Color coloredHatShade4)
+        //{
+        //    coloredHat = new Color(255, 255, 255);
+        //    coloredHatShade = new Color(204, 204, 204);
+        //    coloredHatShade2 = new Color(202, 202, 202);
+        //    coloredHatShade3 = new Color(247, 247, 247);
+        //    coloredHatShade4 = new Color(250, 250, 250);
+        //    switch (playerColor)
+        //    {
+        //        case PlayerColor.White:
+        //            coloredHat = new Color(255, 255, 255);
+        //            coloredHatShade = new Color(204, 204, 204);
+        //            coloredHatShade2 = new Color(202, 202, 202);
+        //            coloredHatShade3 = new Color(247, 247, 247);
+        //            coloredHatShade4 = new Color(250, 250, 250);
+        //            break;
+        //        case PlayerColor.Red:
+        //            break;
+        //        case PlayerColor.Green:
+        //            break;
+        //        case PlayerColor.Blue:
+        //            break;
+        //        case PlayerColor.Black:
+        //            coloredHat = new Color(100, 100, 100);
+        //            coloredHatShade = new Color(0, 0, 0);
+        //            coloredHatShade2 = new Color(2, 2, 2);
+        //            coloredHatShade3 = new Color(97, 97, 97);
+        //            coloredHatShade4 = new Color(99, 99, 99);
+        //            break;
+        //        default:
+        //            throw new ArgumentOutOfRangeException("playerColor");
+        //    }
+
+        //}
+    }
+
+    public enum PlayerColor
+    {
+        White, Red, Green, Blue, Black
     }
 
     public enum playerAnimations
@@ -259,3 +375,4 @@ namespace Bomberbro.bomberman
         normal, idle, up, down, left, right, dead
     }
 }
+
